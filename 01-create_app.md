@@ -1,4 +1,4 @@
-Chapter 1: Creating The App
+# Chapter 1: Creating The App
 
 * Install the GenericApp gem by entering the command "gem install generic_app".
 * Enter the following commands:
