@@ -1,6 +1,6 @@
 # Ruby on Racetracks Tutorial: Omniauth
 
-Welcome to the [Ruby on Racetracks](http://www.rubyonracetracks.com/) Tutorial on Omniauth!
+Welcome to the [Ruby on Racetracks](http://www.rubyonracetracks.com/) Tutorial on OmniAuth!
 
 ## What's the Point?
 In this tutorial, you will add the Omniauth feature to a Rails app.  This allows users (and admins) to log in through Google, Facebook, Twitter, or other popular services.
