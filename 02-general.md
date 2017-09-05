@@ -82,15 +82,24 @@ git commit -m "Added the omniauth callbacks to the routing"
     @user = User.find_for_oauth(request.env['omniauth.auth'])
 
     if @user.persisted?
-      sign_in_and_redirect @user, :event => :authentication #this will throw if @user is not activated
-      set_flash_message(:notice, :success, :kind => provider.capitalize) if is_navigational_format?
+      sign_in_and_redirect @user, event: :authentication # This will throw if @user is not activated
+      set_flash_message(:notice, :success, kind: provider.capitalize) if is_navigational_format?
     else
-      session["devise.#{provider}_data"] = request.env["omniauth.auth"]
+      session["devise.#{provider}_data"] = request.env['omniauth.auth']
       redirect_to new_user_registration_url
     end
   end
 ```
-* 
+* Add the following lines to the beginning of app/controllers/users/omniauth_callbacks_controller.rb:
+```
+# rubocop:disable Metrics/AbcSize
+# rubocop:disable Metrics/LineLength
+```
+* Add the following lines to the end of app/controllers/users/omniauth_callbacks_controller.rb:
+```
+# rubocop:enable Metrics/AbcSize
+# rubocop:enable Metrics/LineLength
+```
 
 ## Wrapping Up
 * Enter the following commands:
