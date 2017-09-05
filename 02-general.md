@@ -100,12 +100,15 @@ git commit -m "Added the omniauth callbacks to the routing"
 # rubocop:enable Metrics/AbcSize
 # rubocop:enable Metrics/LineLength
 ```
-
-## Wrapping Up
 * Enter the following commands:
 ```
 git add .
-git commit -m "Made general changes to prepare for OmniAuth"
+git commit -m "Updated app/controllers/users/omniauth_callbacks_controller.rb"
+```
+
+## Wrapping Up
+* Enter the following command:
+```
 git push origin omniauth_prepare
 ```
 * Go to the GitHub repository and click on the "Compare and pull request" button for this branch.
