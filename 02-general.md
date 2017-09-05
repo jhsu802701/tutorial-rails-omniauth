@@ -3,7 +3,7 @@
 In this chapter, you will update the user model.
 
 ## New Branch
-Enter the command "git checkout -b omniauth_prepare"
+Enter the command "git checkout -b omniauth_prepare".
 
 ## Gemfile
 * Add the following lines to the end of the Gemfile:
