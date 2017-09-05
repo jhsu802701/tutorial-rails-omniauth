@@ -67,7 +67,7 @@ git commit -m "Added the provider and uid parameters to users"
 * Enter the following commands:
 ```
 git add .
-git commit -m "Added the omniauthable devise module"
+git commit -m "Updated the user model"
 ```
 
 ## Routing
