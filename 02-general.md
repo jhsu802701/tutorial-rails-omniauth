@@ -6,28 +6,23 @@ In this chapter, you will update the user model.
 Enter the command "git checkout -b omniauth_prepare".
 
 ## Gemfile
-* Add the following lines to the end of the Gemfile:
+Add the following lines to the end of the Gemfile:
 ```
 gem 'omniauth'
 gem 'dotenv-rails' # Needed to keep private information (like the API_ID and APP_SECRET values) out of the source code
 ```
-* Enter the command "sh git_check.sh".  All tests should pass, and there should be no offenses.  If all goes well, you are ready to move on.
-* Enter the following commands:
+
+## Preparing .env
+* Create the file .env-orig with the following content:
 ```
-git add .
-git commit -m "Added the omniauth and dotenv-rails gems"
+FACEBOOK_API='APP_ID'
+FACEBOOK_KEY='APP_SECRET'
 ```
 
 ## User Parameters
-* Add the provider and uid parameters to the user model by entering the following command:
+Add the provider and uid parameters to the user model by entering the following command:
 ```
 rails g migration AddOmniauthToUsers provider:index uid:index
-```
-* Enter the command "sh git_check.sh".  All tests should pass, and there should be no offenses.  If all goes well, you are ready to move on.
-* Enter the following commands:
-```
-git add .
-git commit -m "Added the provider and uid parameters to users"
 ```
 
 ## User Model
@@ -55,23 +50,11 @@ git commit -m "Added the provider and uid parameters to users"
     "#{auth.uid}-#{auth.provider}@example.com"
   end
 ```
-* Enter the command "sh git_check.sh".  All tests should pass, and there should be no offenses.  If all goes well, you are ready to move on.
-* Enter the following commands:
-```
-git add .
-git commit -m "Updated the user model"
-```
 
 ## Routing
-* In the user section of config/routes.rb, add "omniauth_callbacks: 'users/omniauth_callbacks'" to the list of controllers under devise.
-* Enter the command "sh git_check.sh".  All tests should pass, and there should be no offenses.  If all goes well, you are ready to move on.
-* Enter the following commands:
-```
-git add .
-git commit -m "Added the omniauth callbacks to the routing"
-```
+In the user section of config/routes.rb, add "omniauth_callbacks: 'users/omniauth_callbacks'" to the list of controllers under devise.
 
-# OmniAuth Callbacks Controller
+## OmniAuth Callbacks Controller
 * In the file app/controllers/users/omniauth_callbacks_controller.rb, add the following lines just before the last "end":
 ```
   private
