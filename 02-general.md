@@ -105,7 +105,7 @@ git commit -m "Added the omniauth callbacks to the routing"
 * Enter the following commands:
 ```
 git add .
-git commit -m "Updated the user model to prepare for OmniAuth"
+git commit -m "Made general changes to prepare for OmniAuth"
 git push origin omniauth_prepare
 ```
 * Go to the GitHub repository and click on the "Compare and pull request" button for this branch.
