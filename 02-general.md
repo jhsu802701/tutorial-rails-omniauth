@@ -57,7 +57,7 @@ git commit -m "Added the provider and uid parameters to users"
     end
   end
 ```
-* At the end of the private section, add the following lines:
+* Just before the end of the private section, add the following lines:
 ```
   def self.dummy_email(auth)
     "#{auth.uid}-#{auth.provider}@example.com"
