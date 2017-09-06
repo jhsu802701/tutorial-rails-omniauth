@@ -1,6 +1,6 @@
 # Chapter 2: General Preparations for OmniAuth 
 
-In this chapter, you will update the user model.
+In this chapter, you will make the general preparations needed for all OmniAuth services.
 
 ## New Branch
 Enter the command "git checkout -b omniauth_prepare".
@@ -90,6 +90,7 @@ git commit -m "Updated app/controllers/users/omniauth_callbacks_controller.rb"
 ```
 
 ## Wrapping Up
+* Enter the command "sh git_check.sh".  All tests should pass, and there should be no offenses.
 * Enter the following command:
 ```
 git push origin omniauth_prepare
