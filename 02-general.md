@@ -12,11 +12,11 @@ gem 'omniauth'
 gem 'dotenv-rails' # Needed to keep private information (like the API_ID and APP_SECRET values) out of the source code
 ```
 
-## Preparing .env
-* Create the file .env-orig with the following content:
+## .gitignore
+* Add the following lines to the end of the .gitignore file:
 ```
-FACEBOOK_API='APP_ID'
-FACEBOOK_KEY='APP_SECRET'
+# Keep the API and KEY values out of the source code
+.env
 ```
 
 ## User Parameters
