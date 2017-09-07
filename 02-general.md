@@ -11,6 +11,13 @@ Enter the command "git checkout -b omniauth_prepare".
 gem 'omniauth'
 gem 'dotenv-rails' # Needed to keep export API and key values into environment variables
 ```
+* Enter the command "bundle install".
+* Enter the following commands:
+```
+gem list "^omniauth$"
+gem list "^dotenv-rails$"
+```
+* Pin the version numbers of the omniauth and dotenv-rails gems in your Gemfile.
 * Enter the command "sh git_check.sh".
 
 ## .gitignore
