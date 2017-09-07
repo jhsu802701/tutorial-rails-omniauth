@@ -14,7 +14,7 @@ gem 'dotenv-rails' # Needed to keep export API and key values into environment v
 * Enter the command "sh git_check.sh".
 
 ## .gitignore
-* Add the following lines to the end of the .gitignore file:
+Add the following lines to the end of the .gitignore file:
 ```
 
 # Keep the API and KEY values out of the source code
@@ -22,10 +22,11 @@ gem 'dotenv-rails' # Needed to keep export API and key values into environment v
 ```
 
 ## User Parameters
-Add the provider and uid parameters to the user model by entering the following command:
+* Add the provider and uid parameters to the user model by entering the following command:
 ```
 rails g migration AddOmniauthToUsers provider:index uid:index
 ```
+* Enter the command "sh git_check.sh".
 
 ## User Model
 * In the list of devise modules in app/models/user.rb, add the attribute ":omniauthable".
