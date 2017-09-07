@@ -3,6 +3,22 @@
 ## New Branch
 Enter the command "git checkout -b omniauth_facebook".
 
+## Facebook Credentials
+* If you don't already have a Facebook account, create one.
+* Go to the [Facebook for Developers page](https://developers.facebook.com/).
+* Create a new app.  Fill in the name of your app with the same name you've been using in GitHub and Heroku.
+* Go to the Dashboard to see the App ID and App Secret.
+* For easier reference, save your App ID and App Secret in KeePassX (or your preferred password manager).
+
+## .env
+* If the .env file does not already exist in your app, create it.
+* Add the following content to the .env file:
+```
+FACEBOOK_API='APP_ID'
+FACEBOOK_KEY='APP_SECRET'
+```
+* Replace the APP_ID and APP_SECRET with the values you saved from your Facebook App dashboard.
+
 ## config/initializers/devise.rb
 Add the following line just before the last "end" line in config/initializers/devise.rb:
 ```
