@@ -86,14 +86,14 @@ In the user section of config/routes.rb, add "omniauth_callbacks: 'users/omniaut
 # rubocop:enable Metrics/AbcSize
 # rubocop:enable Metrics/LineLength
 ```
+* Enter the command "sh git_check.sh".  All tests should pass, and there should be no offenses.
 * Enter the following commands:
 ```
 git add .
-git commit -m "Updated app/controllers/users/omniauth_callbacks_controller.rb"
+git commit -m "Made general OmniAuth preparations"
 ```
 
 ## Wrapping Up
-* Enter the command "sh git_check.sh".  All tests should pass, and there should be no offenses.
 * Enter the following command:
 ```
 git push origin omniauth_prepare
