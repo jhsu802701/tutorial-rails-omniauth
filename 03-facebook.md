@@ -25,20 +25,19 @@ Add the following line just before the last "end" line in config/initializers/de
   config.omniauth :facebook, ENV['FACEBOOK_API'], ENV['FACEBOOK_KEY']
 ```
 
+## Gemfile
+* Add the following line to the end of the Gemfile:
+```
+gem 'omniauth-facebook'
+```
+* Enter the command "bundle install".
+* Pin the version of omniauth-facebook.
+* Enter the command "sh git_check.sh".
+
 ## User Model
 * In the file app/models/user.rb, add "omniauth_providers: [:facebook]" to the list of devise modules.
 * NOTE: If "omniauth_providers" is already listed as a devise module, add ":facebook" to the list of omni_auth providers.
-
-## app/controllers/users/omniauth_callbacks_controller.rb
-* In the file app/controllers/users/omniauth_callbacks_controller.rb, add the following lines just before the line "private":
-```
-  def facebook
-    callback_from :facebook
-  end
-```
-
-## app/models/user.rb
-In the file app/models/user.rb, add the following lines just before the line "private":
+* Add the following lines just before the line "private":
 ```
   def self.new_with_session(params, session)
     super.tap do |user|
@@ -46,6 +45,14 @@ In the file app/models/user.rb, add the following lines just before the line "pr
         user.email = data["email"] if user.email.blank?
       end
     end
+  end
+```
+
+## app/controllers/users/omniauth_callbacks_controller.rb
+* In the file app/controllers/users/omniauth_callbacks_controller.rb, add the following lines just before the line "private":
+```
+  def facebook
+    callback_from :facebook
   end
 ```
 
