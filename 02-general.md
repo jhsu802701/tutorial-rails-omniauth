@@ -24,7 +24,7 @@ gem list "^dotenv-rails$"
 Add the following lines to the end of the .gitignore file:
 ```
 
-# Keep the API and KEY values out of the source code
+# Keep OmniAuth credentials out of the source code
 .env
 ```
 
