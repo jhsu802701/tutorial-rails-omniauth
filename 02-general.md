@@ -6,11 +6,12 @@ In this chapter, you will make the general preparations needed for all OmniAuth 
 Enter the command "git checkout -b omniauth_prepare".
 
 ## Gemfile
-Add the following lines to the end of the Gemfile:
+* Add the following lines to the end of the Gemfile:
 ```
 gem 'omniauth'
 gem 'dotenv-rails' # Needed to keep export API and key values into environment variables
 ```
+* Enter the command "sh git_check.sh".
 
 ## .gitignore
 * Add the following lines to the end of the .gitignore file:
