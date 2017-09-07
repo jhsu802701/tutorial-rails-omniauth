@@ -15,6 +15,7 @@ gem 'dotenv-rails' # Needed to keep private information (like the API_ID and APP
 ## .gitignore
 * Add the following lines to the end of the .gitignore file:
 ```
+
 # Keep the API and KEY values out of the source code
 .env
 ```
