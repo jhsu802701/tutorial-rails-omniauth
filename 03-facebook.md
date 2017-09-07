@@ -22,7 +22,7 @@ FACEBOOK_KEY='APP_SECRET'
 ## config/initializers/devise.rb
 Add the following line just before the last "end" line in config/initializers/devise.rb:
 ```
-  config.omniauth :facebook, 'APP_ID', 'APP_SECRET'
+  config.omniauth :facebook, ENV['FACEBOOK_API'], ENV['FACEBOOK_KEY']
 ```
 
 ## User Model
