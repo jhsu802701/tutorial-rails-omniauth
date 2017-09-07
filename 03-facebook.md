@@ -61,9 +61,10 @@ gem list "^omniauth-facebook$"
 ```
 
 ## Home Page
-* Add the following line to app/views/static_pages/home.html.erb immediately after the "Sign up now" button:
+* Add the following lines to app/views/static_pages/home.html.erb immediately after the "Sign up now" button:
 ```
-      <%= link_to "Sign in with Facebook", user_facebook_omniauth_authorize_path, class: "btn btn-lg btn-primary" %>
+      <br>
+      <%= link_to "Sign in with Facebook", user_facebook_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
 ```
 
 ## Wrapping Up
