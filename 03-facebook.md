@@ -31,7 +31,11 @@ Add the following line just before the last "end" line in config/initializers/de
 gem 'omniauth-facebook'
 ```
 * Enter the command "bundle install".
-* Pin the version of omniauth-facebook.
+* Enter the following command:
+```
+gem list "^omniauth-facebook$"
+```
+* Pin the version of omniauth-facebook in the Gemfile.
 * Enter the command "sh git_check.sh".
 
 ## User Model
