@@ -9,7 +9,7 @@ Enter the command "git checkout -b omniauth_prepare".
 Add the following lines to the end of the Gemfile:
 ```
 gem 'omniauth'
-gem 'dotenv-rails' # Needed to keep private information (like the API_ID and APP_SECRET values) out of the source code
+gem 'dotenv-rails' # Needed to keep export API and key values into environment variables
 ```
 
 ## .gitignore
