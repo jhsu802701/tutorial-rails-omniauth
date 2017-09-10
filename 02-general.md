@@ -39,25 +39,18 @@ rails g migration AddOmniauthToUsers provider:index uid:index
 * In the list of devise modules in app/models/user.rb, add the attribute ":omniauthable".
 * Just before the end of the public section, add the following lines:
 ```
-  def self.find_for_oauth(auth)
-    user = User.where(uid: auth.uid, provider: auth.provider).first
-
-    unless user
-      user = User.create(
-        uid:      auth.uid,
-        provider: auth.provider,
-        email:    User.dummy_email(auth),
-        password: Devise.friendly_token[0, 20]
-      )
+  def self.from_omniauth(auth)
+    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+      puts auth
+      user.email = auth.info.email
+      user.password = Devise.friendly_token[0,20]
+      name_auth = auth.info.name
+      name_auth_array = name_auth.gsub(/\s+/m, ' ').strip.split(' ')
+      user.last_name = name_auth_array.first # assuming the user model has a name
+      user.first_name = name_auth_array.last # assuming the user model has a name
+      user.username = name_auth.delete(' ')
+      user.confirmed_at = Time.now
     end
-
-    user
-  end
-```
-* Just before the end of the private section, add the following lines:
-```
-  def dummy_email(auth)
-    "#{auth.uid}-#{auth.provider}@example.com"
   end
 ```
 
@@ -67,31 +60,9 @@ In the user section of config/routes.rb, add "omniauth_callbacks: 'users/omniaut
 ## OmniAuth Callbacks Controller
 * In the file app/controllers/users/omniauth_callbacks_controller.rb, add the following lines just before the last "end":
 ```
-  private
-
-  def callback_from(provider)
-    provider = provider.to_s
-
-    @user = User.find_for_oauth(request.env['omniauth.auth'])
-
-    if @user.persisted?
-      sign_in_and_redirect @user, event: :authentication # This will throw if @user is not activated
-      set_flash_message(:notice, :success, kind: provider.capitalize) if is_navigational_format?
-    else
-      session["devise.#{provider}_data"] = request.env['omniauth.auth']
-      redirect_to new_user_registration_url
-    end
+  def failure
+    redirect_to root_path
   end
-```
-* Add the following lines to the beginning of app/controllers/users/omniauth_callbacks_controller.rb:
-```
-# rubocop:disable Metrics/AbcSize
-# rubocop:disable Metrics/LineLength
-```
-* Add the following lines to the end of app/controllers/users/omniauth_callbacks_controller.rb:
-```
-# rubocop:enable Metrics/AbcSize
-# rubocop:enable Metrics/LineLength
 ```
 * Enter the command "sh git_check.sh".  All tests should pass, and there should be no offenses.
 * Enter the following commands:
