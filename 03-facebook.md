@@ -29,15 +29,15 @@ http://localhost:3010/
 * If the .env file does not already exist in your app, create it.
 * Add the following content to the .env file:
 ```
-FACEBOOK_API='APP_ID'
-FACEBOOK_KEY='APP_SECRET'
+FACEBOOK_APP_ID='APP_ID'
+FACEBOOK_APP_SECRET='APP_SECRET'
 ```
-* Replace the APP_ID and APP_SECRET with the values you saved from your Facebook App dashboard.
+* Replace APP_ID and APP_SECRET with the values you saved from your Facebook App dashboard.
 
 ## config/initializers/devise.rb
 Add the following line just before the last "end" line in config/initializers/devise.rb:
 ```
-  config.omniauth :facebook, ENV['FACEBOOK_API'], ENV['FACEBOOK_KEY']
+  config.omniauth :facebook, 'FACEBOOK_APP_ID', 'FACEBOOK_APP_SECRET', callback_url: 'http://localhost:3000/users/auth/facebook/callback'
 ```
 
 ## Gemfile
@@ -60,9 +60,11 @@ gem list "^omniauth-facebook$"
 ```
   def self.new_with_session(params, session)
     super.tap do |user|
+      # BEGIN: new_with_session for specific services
       if data = session["devise.facebook_data"] && session["devise.facebook_data"]["extra"]["raw_info"]
         user.email = data["email"] if user.email.blank?
       end
+      # END: new_with_session for specific services
     end
   end
 ```
