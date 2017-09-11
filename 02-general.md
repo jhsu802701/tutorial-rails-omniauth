@@ -18,7 +18,7 @@ gem list "^omniauth$"
 gem list "^dotenv-rails$"
 ```
 * Pin the version numbers of the omniauth and dotenv-rails gems in your Gemfile.
-* Enter the command "sh git_check.sh".
+* Enter the command "bundle install".
 
 ## .gitignore
 Add the following lines to the end of the .gitignore file:
@@ -31,9 +31,9 @@ Add the following lines to the end of the .gitignore file:
 ## User Parameters
 * Add the provider and uid parameters to the user model by entering the following command:
 ```
-rails g migration AddOmniauthToUsers provider:index uid:index
+rails generate migration AddOmniauthToUsers provider:string uid:string
 ```
-* Enter the command "sh git_check.sh".
+* Enter the command "rails db:migrate".
 
 ## User Model
 * In the list of devise modules in app/models/user.rb, add the attribute ":omniauthable".
@@ -41,7 +41,6 @@ rails g migration AddOmniauthToUsers provider:index uid:index
 ```
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
-      puts auth
       user.email = auth.info.email
       user.password = Devise.friendly_token[0,20]
       name_auth = auth.info.name
