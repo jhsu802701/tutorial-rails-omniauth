@@ -1,7 +1,7 @@
-# Chapter 3: Adding Facebook Authentication
+# Chapter 4: Adding Facebook Authentication For Specific Services
 
 ## New Branch
-Enter the command "git checkout -b omniauth_facebook".
+Enter the command "git checkout -b omniauth_specific".
 
 ## Facebook Credentials
 * If you don't already have a Facebook account, create one.
