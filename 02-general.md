@@ -8,7 +8,7 @@ Enter the command "git checkout -b omniauth_prepare".
 ## Gemfile
 * Add the following lines to the end of the Gemfile:
 ```
-gem 'omniauth'
+gem 'omniauth' # Allows users to use outside services for authentication
 gem 'dotenv-rails' # Needed to keep export API and key values into environment variables
 ```
 * Enter the command "bundle install".
