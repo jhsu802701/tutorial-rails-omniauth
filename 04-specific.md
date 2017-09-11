@@ -1,4 +1,4 @@
-# Chapter 4: Adding Facebook Authentication For Specific Services
+# Chapter 4: Adding Authentication For Specific Services
 
 ## New Branch
 Enter the command "git checkout -b omniauth_specific".
