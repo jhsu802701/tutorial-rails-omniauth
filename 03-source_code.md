@@ -16,13 +16,6 @@ Enter the command "git checkout -b omniauth_source_code".
 ```
 * Enter the command "git status".  You'll see that .gitignore has changed, but .env is no longer mentioned.
 
-## Home Page
-* Add the following lines to app/views/static_pages/home.html.erb immediately after the "Sign up now" button:
-```
-      <br><br>
-      <%= link_to "Sign in with Facebook", user_facebook_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
-```
-
 ## User Parameters
 * Add the provider and uid parameters to the user model by entering the following command:
 ```
@@ -104,6 +97,13 @@ Add the following line just before the last "end" line in config/initializers/de
   def failure
     redirect_to root_path
   end
+```
+
+## Home Page
+* Add the following lines to app/views/static_pages/home.html.erb immediately after the "Sign up now" button:
+```
+      <br><br>
+      <%= link_to "Sign in with Facebook", user_facebook_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
 ```
 
 ## .env
