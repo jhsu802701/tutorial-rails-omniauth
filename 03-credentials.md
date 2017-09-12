@@ -1,4 +1,4 @@
-# Chapter 3: Credentials
+# Chapter 2: Credentials
 
 Allowing users to log into your app with Facebook, Google, or other external authentication services requires the right credentials.  If you don't already have an account with each of these services, be sure to create one first.
 
