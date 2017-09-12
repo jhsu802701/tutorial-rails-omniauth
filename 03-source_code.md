@@ -7,13 +7,14 @@ Enter the command "git checkout -b omniauth_source_code".
 
 ## .gitignore
 * Enter the command "touch .env".  This is where you will later add the environment variables needed for OmniAuth services.
+* Enter the command "git status".  You'll see that .env is an untracked file.
 * Add the following lines to the end of the .gitignore file:
 ```
 
 # Keep OmniAuth credentials out of the source code
 .env
 ```
-* Enter the command "git status".  You'll see that .gitignore has changed, but .env is not added to the source code.
+* Enter the command "git status".  You'll see that .gitignore has changed, but .env is no longer mentioned.
 
 ## Home Page
 * Add the following lines to app/views/static_pages/home.html.erb immediately after the "Sign up now" button:
