@@ -100,11 +100,14 @@ Add the following line just before the last "end" line in config/initializers/de
 ```
 
 ## Home Page
-* Add the following lines to app/views/static_pages/home.html.erb immediately after the "Sign up now" button:
+Add the following lines to app/views/static_pages/home.html.erb immediately after the "Sign up now" button:
 ```
       <br><br>
       <%= link_to "Sign in with Facebook", user_facebook_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
 ```
+
+## Routing
+In the user section of config/routes.rb, add "omniauth_callbacks: 'users/omniauth_callbacks'" to the list of controllers under devise.
 
 ## .env
 * Add the following content to the .env file:
