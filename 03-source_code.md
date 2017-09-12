@@ -3,36 +3,53 @@
 ## New Branch
 Enter the command "git checkout -b omniauth_source_code".
 
-## Facebook Credentials
-* If you don't already have a Facebook account, create one.
-* Go to the [Facebook for Developers page](https://developers.facebook.com/).
-* Create a new app.  Fill in the name of your app with the same name you've been using in GitHub and Heroku.
-* Go to the Dashboard to see the App ID and App Secret.
-* For easier reference, save your App ID and App Secret in KeePassX (or your preferred password manager).
-* From your app's Dashboard, add the Facebook Login feature.  In the list of "Valid OAuth redirect URIs", add the following URLs:
-```
-http://localhost:3000/
-http://localhost:3001/
-http://localhost:3002/
-http://localhost:3003/
-http://localhost:3004/
-http://localhost:3005/
-http://localhost:3006/
-http://localhost:3007/
-http://localhost:3008/
-http://localhost:3009/
-http://localhost:3010/
-```
-* In addition, add the URL of your app in the production environment.
+## Integration Tests
 
-## .env
-* If the .env file does not already exist in your app, create it.
-* Add the following content to the .env file:
+## .gitignore
+* Enter the command "touch .env".  This is where you will later add the environment variables needed for OmniAuth services.
+* Add the following lines to the end of the .gitignore file:
 ```
-FACEBOOK_APP_ID='APP_ID'
-FACEBOOK_APP_SECRET='APP_SECRET'
+
+# Keep OmniAuth credentials out of the source code
+.env
 ```
-* Replace APP_ID and APP_SECRET with the values you saved from your Facebook App dashboard.
+* Enter the command "git status".  You'll see that .gitignore has changed, but .env is not added to the source code.
+
+## Home Page
+* Add the following lines to app/views/static_pages/home.html.erb immediately after the "Sign up now" button:
+```
+      <br><br>
+      <%= link_to "Sign in with Facebook", user_facebook_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
+```
+
+## User Parameters
+* Add the provider and uid parameters to the user model by entering the following command:
+```
+rails generate migration AddOmniauthToUsers provider:string uid:string
+```
+* Enter the command "rails db:migrate".
+
+
+## Gemfile
+* Add the following lines to the end of the Gemfile:
+```
+# BEGIN: omniauth
+gem 'dotenv-rails' # Needed to keep export API and key values into environment variables
+gem 'omniauth'
+gem 'omniauth-facebook'
+# END: omniauth
+
+```
+* Enter the command "bundle install".
+* Enter the following commands:
+```
+gem list "^dotenv-rails$"
+gem list "^omniauth$"
+gem list "^omniauth-facebook$"
+```
+* Pin the version numbers of the omniauth-related gems in your Gemfile.
+* Enter the command "bundle install".
+
 
 ## config/initializers/devise.rb
 Add the following line just before the last "end" line in config/initializers/devise.rb:
@@ -40,31 +57,31 @@ Add the following line just before the last "end" line in config/initializers/de
   config.omniauth :facebook, 'FACEBOOK_APP_ID', 'FACEBOOK_APP_SECRET', callback_url: 'http://localhost:3000/users/auth/facebook/callback'
 ```
 
-## Gemfile
-* Add the following line to the end of the Gemfile:
-```
-gem 'omniauth-facebook'
-```
-* Enter the command "bundle install".
-* Enter the following command:
-```
-gem list "^omniauth-facebook$"
-```
-* Pin the version of omniauth-facebook in the Gemfile.
-* Enter the command "sh git_check.sh".
-
 ## User Model
-* In the file app/models/user.rb, add "omniauth_providers: [:facebook]" to the list of devise modules.
-* NOTE: If "omniauth_providers" is already listed as a devise module, add ":facebook" to the list of omni_auth providers.
-* Add the following lines just before the line "private":
+* In the list of devise modules in app/models/user.rb, add the following attributes to the list of devise modules:
 ```
+:omniauthable, omniauth_providers: [:facebook]
+```
+* Just before the end of the public section, add the following lines:
+```
+  def self.from_omniauth(auth)
+    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+      user.email = auth.info.email
+      user.password = Devise.friendly_token[0,20]
+      name_auth = auth.info.name
+      name_auth_array = name_auth.gsub(/\s+/m, ' ').strip.split(' ')
+      user.last_name = name_auth_array.first # assuming the user model has a name
+      user.first_name = name_auth_array.last # assuming the user model has a name
+      user.username = name_auth.delete(' ')
+      user.confirmed_at = Time.now
+    end
+  end
+
   def self.new_with_session(params, session)
     super.tap do |user|
-      # BEGIN: new_with_session for specific services
       if data = session["devise.facebook_data"] && session["devise.facebook_data"]["extra"]["raw_info"]
         user.email = data["email"] if user.email.blank?
       end
-      # END: new_with_session for specific services
     end
   end
 ```
@@ -74,7 +91,6 @@ gem list "^omniauth-facebook$"
 ```
   def facebook
     @user = User.from_omniauth(request.env["omniauth.auth"])
-
     if @user.persisted?
       sign_in_and_redirect @user, :event => :authentication
       set_flash_message(:notice, :success, :kind => "Facebook") if is_navigational_format?
@@ -83,14 +99,20 @@ gem list "^omniauth-facebook$"
       redirect_to new_user_registration_url
     end
   end
+
+  def failure
+    redirect_to root_path
+  end
 ```
 
-## Home Page
-* Add the following lines to app/views/static_pages/home.html.erb immediately after the "Sign up now" button:
+## .env
+* Add the following content to the .env file:
 ```
-      <br>
-      <%= link_to "Sign in with Facebook", user_facebook_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
+FACEBOOK_APP_ID='APP_ID'
+FACEBOOK_APP_SECRET='APP_SECRET'
 ```
+* Replace APP_ID and APP_SECRET with the values you saved from your Facebook App dashboard.
+* NOTE: Because the .env file is NOT in the source code, you must replace it every time you git clone the source code.
 
 ## Wrapping Up
 * Enter the following commands:
