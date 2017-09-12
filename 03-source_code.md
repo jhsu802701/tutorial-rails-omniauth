@@ -1,7 +1,7 @@
-# Chapter 4: Adding Authentication For Specific Services
+# Chapter 3: Updating the Source Code
 
 ## New Branch
-Enter the command "git checkout -b omniauth_specific".
+Enter the command "git checkout -b omniauth_source_code".
 
 ## Facebook Credentials
 * If you don't already have a Facebook account, create one.
@@ -97,7 +97,7 @@ gem list "^omniauth-facebook$"
 ```
 git add .
 git commit -m "Added Facebook authentication"
-git push origin omniauth_facebook
+git push origin omniauth_source_code
 ```
 * Go to the GitHub repository and click on the "Compare and pull request" button for this branch.
 * When you see that your app passes in contiuous integration, accept this pull request to merge it with the master branch.
