@@ -4,10 +4,25 @@
 Enter the command "git checkout -b omniauth".
 
 ## Integration Tests
-* Enter the command "rails generate integration_test omniauth".
-* Replace the section between "class OmniauthTest < ActionDispatch::IntegrationTest" and the last "end" with the following code:
+* Enter the command "rails generate integration_test omniauth_facebook".
+* Replace the section between "class OmniauthFacebookTest < ActionDispatch::IntegrationTest" and the last "end" with the following code:
 ```
-
+  test 'Can login through Facebook from home page' do
+    visit root_path
+    click_on 'Log in with Facebook'
+    assert page.has_text?('Successfully authenticated from Facebook account.')
+    assert_page.has_text?('You are logged in as a user')
+    assert page.has_css?('h1', text: 'Home')
+  end
+  
+  test 'Can login through Facebook from user login page' do
+    visit root_path
+    click_on 'Login'
+    click_on 'Log in with Facebook'
+    assert page.has_text?('Successfully authenticated from Facebook account.')
+    assert_page.has_text?('You are logged in as a user')
+    assert page.has_css?('h1', text: 'Home')
+  end
 ```
 
 ## .gitignore
