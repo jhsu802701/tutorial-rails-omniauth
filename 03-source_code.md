@@ -4,6 +4,11 @@
 Enter the command "git checkout -b omniauth_source_code".
 
 ## Integration Tests
+* Enter the command "rails generate integration_test omniauth".
+* Replace the section between "class OmniauthTest < ActionDispatch::IntegrationTest" and the last "end" with the following code:
+```
+
+```
 
 ## .gitignore
 * Enter the command "touch .env".  This is where you will later add the environment variables needed for OmniAuth services.
@@ -117,6 +122,24 @@ FACEBOOK_APP_SECRET='APP_SECRET'
 ```
 * Replace APP_ID and APP_SECRET with the values you saved from your Facebook App dashboard.
 * NOTE: Because the .env file is NOT in the source code, you must replace it every time you git clone the source code.
+
+## .rubocop.yml
+* In the .rubocop.yml file, add the following files to the list of exemptions from Metrics/LineLength:
+```
+app/controllers/users/omniauth_callbacks_controller.rb
+app/models/user.rb
+```
+* Add the following lines:
+```
+Metrics/AbcSize:
+  Exclude:
+    - app/models/user.rb
+
+Lint/AssignmentInCondition:
+  Exclude:
+    - app/models/user.rb
+```
+
 
 ## Wrapping Up
 * Enter the following commands:
