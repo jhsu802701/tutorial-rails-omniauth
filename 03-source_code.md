@@ -1,7 +1,7 @@
 # Chapter 3: Updating the Source Code
 
 ## New Branch
-Enter the command "git checkout -b omniauth_source_code".
+Enter the command "git checkout -b omniauth".
 
 ## Integration Tests
 * Enter the command "rails generate integration_test omniauth".
@@ -146,7 +146,7 @@ Lint/AssignmentInCondition:
 ```
 git add .
 git commit -m "Added Facebook authentication"
-git push origin omniauth_source_code
+git push origin omniauth
 ```
 * Go to the GitHub repository and click on the "Compare and pull request" button for this branch.
 * When you see that your app passes in contiuous integration, accept this pull request to merge it with the master branch.
