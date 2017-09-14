@@ -81,11 +81,11 @@ Add the following line just before the last "end" line in config/initializers/de
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       user.email = auth.info.email
-      user.password = Devise.friendly_token[0,20]
+      user.password = Devise.friendly_token[0, 20]
       name_auth = auth.info.name
       name_auth_array = name_auth.gsub(/\s+/m, ' ').strip.split(' ')
-      user.last_name = name_auth_array.first # assuming the user model has a name
-      user.first_name = name_auth_array.last # assuming the user model has a name
+      user.last_name = name_auth_array.first
+      user.first_name = name_auth_array.last
       user.username = name_auth.delete(' ')
       user.confirmed_at = Time.now
     end
@@ -99,6 +99,7 @@ Add the following line just before the last "end" line in config/initializers/de
     end
   end
 ```
+* Please note that each user MUST have an email address, password, last name, first name, and username.  In addition, a user must be confirmed in order to log in.  Therefore, these conditions are also true for those who wish to login to the app with Facebook, Google, or other external logins.
 
 ## app/controllers/users/omniauth_callbacks_controller.rb
 * In the file app/controllers/users/omniauth_callbacks_controller.rb, add the following lines just before the line "private":
