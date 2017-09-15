@@ -5,7 +5,7 @@ Enter the command "git checkout -b omniauth".
 
 ## Integration Tests
 * Enter the command "rails generate integration_test omniauth".
-* Replace the section between "class OmniauthTest < ActionDispatch::IntegrationTest" and the last "end" with the following code:
+* Edit the file test/integration/omniauth_test.rb and replace the section between "class OmniauthTest < ActionDispatch::IntegrationTest" and the last "end" with the following code:
 ```
   def login_and_logout_fb
     click_on 'Sign in with Facebook'
@@ -15,13 +15,11 @@ Enter the command "git checkout -b omniauth".
   end
 
   test 'Can login with Facebook credentials' do
-    OmniAuth.config.mock_auth[:facebook] = OmniAuth::AuthHash.new({
-      :provider => 'facebook',
-      :uid => '123545',
-      :confirmed_at => Time.now(),
-      :info => { :last_name => 'Zuckerberg', :first_name => 'Mark',
-                 :email => 'mzuckerberg@facebook.com' }
-      })
+    OmniAuth.config.mock_auth[:facebook] = OmniAuth::AuthHash.new(
+      provider: 'facebook', uid: '123545', confirmed_at: Time.now,
+      info: { last_name: 'Zuckerberg', first_name: 'Mark',
+              email: 'mzuckerberg@facebook.com' }
+    )
     # From home page
     visit root_path
     login_and_logout_fb
@@ -30,7 +28,13 @@ Enter the command "git checkout -b omniauth".
     visit root_path
     click_on 'Login'
     login_and_logout_fb
-  end
+```
+* Enter the command "rails test".  You'll see errors resulting from not having the OmniAuth gem installed.  (You'll take care of this soon.)
+
+## config/environments/test.rb
+Edit the file config/environments/test.rb and add the following line just before the final "end" statement:
+```
+  OmniAuth.config.test_mode = true
 ```
 
 ## .gitignore
@@ -71,7 +75,17 @@ gem list "^omniauth-facebook$"
 ```
 * Pin the version numbers of the omniauth-related gems in your Gemfile.
 * Enter the command "bundle install".
+* Enter the command "rails test".
 
+## Home Page
+Add the following lines to app/views/static_pages/home.html.erb immediately after the "Sign up now" button:
+```
+      <br><br>
+      <%= link_to "Sign in with Facebook", user_facebook_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
+```
+
+## Routing
+In the user section of config/routes.rb, add "omniauth_callbacks: 'users/omniauth_callbacks'" to the list of controllers under devise.
 
 ## config/initializers/devise.rb
 Add the following line just before the last "end" line in config/initializers/devise.rb:
@@ -127,16 +141,6 @@ Add the following line just before the last "end" line in config/initializers/de
     redirect_to root_path
   end
 ```
-
-## Home Page
-Add the following lines to app/views/static_pages/home.html.erb immediately after the "Sign up now" button:
-```
-      <br><br>
-      <%= link_to "Sign in with Facebook", user_facebook_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
-```
-
-## Routing
-In the user section of config/routes.rb, add "omniauth_callbacks: 'users/omniauth_callbacks'" to the list of controllers under devise.
 
 ## .env
 * Add the following content to the .env file:
