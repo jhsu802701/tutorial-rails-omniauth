@@ -3,6 +3,17 @@
 ## New Branch
 Enter the command "git checkout -b omniauth".
 
+## .gitignore
+* Enter the command "touch .env".  This is where you will later add the environment variables needed for OmniAuth services.
+* Enter the command "git status".  You'll see that .env is an untracked file.
+* Add the following lines to the end of the .gitignore file:
+```
+
+# Keep OmniAuth credentials out of the source code
+.env
+```
+* Enter the command "git status".  You'll see that .gitignore has changed, but .env is no longer mentioned.
+
 ## Integration Tests
 * Enter the command "rails generate integration_test omniauth".
 * Edit the file test/integration/omniauth_test.rb and replace the section between "class OmniauthTest < ActionDispatch::IntegrationTest" and the last "end" with the following code:
@@ -36,17 +47,6 @@ Edit the file config/environments/test.rb and add the following line just before
 ```
   OmniAuth.config.test_mode = true
 ```
-
-## .gitignore
-* Enter the command "touch .env".  This is where you will later add the environment variables needed for OmniAuth services.
-* Enter the command "git status".  You'll see that .env is an untracked file.
-* Add the following lines to the end of the .gitignore file:
-```
-
-# Keep OmniAuth credentials out of the source code
-.env
-```
-* Enter the command "git status".  You'll see that .gitignore has changed, but .env is no longer mentioned.
 
 ## User Parameters
 * Add the provider and uid parameters to the user model by entering the following command:
