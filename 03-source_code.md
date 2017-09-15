@@ -39,6 +39,7 @@ Enter the command "git checkout -b omniauth".
     visit root_path
     click_on 'Login'
     login_and_logout_fb
+  end
 ```
 * Enter the command "rails test".  You'll see errors resulting from not having the OmniAuth gem installed.  (You'll take care of this soon.)
 
