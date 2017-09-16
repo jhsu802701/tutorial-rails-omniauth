@@ -41,31 +41,19 @@ Enter the command "git checkout -b omniauth".
     login_and_logout_fb
   end
 ```
-* Enter the command "rails test".  You'll see errors resulting from not having the OmniAuth gem installed.  (You'll take care of this soon.)
-
-## config/environments/test.rb
-Edit the file config/environments/test.rb and add the following line just before the final "end" statement:
-```
-  OmniAuth.config.test_mode = true
-```
-
-## User Parameters
-* Add the provider and uid parameters to the user model by entering the following command:
-```
-rails generate migration AddOmniauthToUsers provider:string uid:string
-```
-* Enter the command "rails db:migrate".
-
+* Enter the command "sh test_app.sh".  You'll see the "uninitialized constant OmniauthTest::OmniAuth" errors, a result of not having OmniAuth installed.
+* Enter the command "alias test1='command for running the tests that failed minus the TESTOPTS portion'".
+* Enter the command "test1".  You'll see the OmniAuth test errors again.
 
 ## Gemfile
 * Add the following lines to the end of the Gemfile:
 ```
+
 # BEGIN: omniauth
-gem 'dotenv-rails' # Needed to keep export API and key values into environment variables
+gem 'dotenv-rails' # Needed to export API and secret values into environment variables
 gem 'omniauth'
 gem 'omniauth-facebook'
 # END: omniauth
-
 ```
 * Enter the command "bundle install".
 * Enter the following commands:
@@ -75,30 +63,28 @@ gem list "^omniauth$"
 gem list "^omniauth-facebook$"
 ```
 * Pin the version numbers of the omniauth-related gems in your Gemfile.
-* Enter the command "bundle install".
-* Enter the command "rails test".
+* Enter the command "bundle install; test1".  Now the test failures are due to missing hyperlinks.
 
 ## Home Page
-Add the following lines to app/views/static_pages/home.html.erb immediately after the "Sign up now" button:
+* Add the following lines to app/views/static_pages/home.html.erb immediately after the "Sign up now" button:
 ```
       <br><br>
       <%= link_to "Sign in with Facebook", user_facebook_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
 ```
+* Enter the command "test1".  Now the test failures are due to undefined paths.
 
 ## Routing
-In the user section of config/routes.rb, add "omniauth_callbacks: 'users/omniauth_callbacks'" to the list of controllers under devise.
-
-## config/initializers/devise.rb
-Add the following line just before the last "end" line in config/initializers/devise.rb:
-```
-  config.omniauth :facebook, ENV['FACEBOOK_APP_ID'], ENV['FACEBOOK_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/facebook/callback'
-```
+* In the user section of config/routes.rb, add "omniauth_callbacks: 'users/omniauth_callbacks'" to the list of controllers under devise.
+* Enter the command "test1".  Now the tests won't even run simply because ":omniauthable" is not specified in the user model.
 
 ## User Model
 * In the list of devise modules in app/models/user.rb, add the following attributes to the list of devise modules:
 ```
 :omniauthable, omniauth_providers: [:facebook]
 ```
+* Enter the command "test1".  The tests fail because the expected confirmations of successful logins do not occur.  You will need to take several additional actions in order to address this.
+* Go to the tmux window where you are running the local server and restart the server by pressing Ctrl-c and then entering the command "sh server.sh".
+* In your browser, go to the home page of your app and then try to sign in with any of the OmniAuth services.  In your browser, you will get the message "Not found. Authentication passthru."  You'll see that your local server shows a 404 (not found) error.
 * Just before the end of the public section, add the following lines:
 ```
   def self.from_omniauth(auth)
@@ -116,13 +102,36 @@ Add the following line just before the last "end" line in config/initializers/de
 
   def self.new_with_session(params, session)
     super.tap do |user|
+      # rubocop:disable Lint/AssignmentInCondition
+      # rubocop:disable Metrics/LineLength
       if data = session['devise.facebook_data'] && session['devise.facebook_data']['extra']['raw_info']
-        user.email = data['email'] if user.email.blank?
+        user.email = data['email'] if user.email?
       end
+      # rubocop:enable Lint/AssignmentInCondition
+      # rubocop:enable Metrics/LineLength
     end
   end
 ```
-* Please note that each user MUST have an email address, password, last name, first name, and username.  In addition, a user must be confirmed in order to log in.  Therefore, these conditions are also true for those who wish to login to the app with Facebook, Google, or other external logins.
+* Please note that each user MUST have an email address, password, last name, first name, and username.  In addition, a user must be confirmed in order to log in.  Therefore, the self.from_omniauth provides these parameters for those who wish to login to the app with Facebook, Google, or other external services.
+
+## config/environments/test.rb
+Edit the file config/environments/test.rb and add the following line just before the final "end" statement:
+```
+  OmniAuth.config.test_mode = true
+```
+
+## User Parameters
+* Add the provider and uid parameters to the user model by entering the following command:
+```
+rails generate migration AddOmniauthToUsers provider:string uid:string
+```
+* Enter the command "rails db:migrate".
+
+## config/initializers/devise.rb
+Add the following line just before the last "end" line in config/initializers/devise.rb:
+```
+  config.omniauth :facebook, ENV['FACEBOOK_APP_ID'], ENV['FACEBOOK_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/facebook/callback'
+```
 
 ## app/controllers/users/omniauth_callbacks_controller.rb
 * In the file app/controllers/users/omniauth_callbacks_controller.rb, add the following lines just before the line "private":
@@ -151,20 +160,20 @@ FACEBOOK_APP_SECRET='APP_SECRET'
 ```
 * Replace APP_ID and APP_SECRET with the values you saved from your Facebook App dashboard.
 * NOTE: Because the .env file is NOT in the source code, you must replace it every time you git clone the source code.
+* Enter the command "test1".  Now your tests pass.
+* In the server tmux window, restart your server.
+* In your browser, go to your app and login and logout with each of your OmniAuth services.  You should now be able to do so successfully.
+* Enter the command "sh git_check.sh".  All tests should pass, but there are a few offenses.
 
 ## .rubocop.yml
 * In the .rubocop.yml file, add the following files to the list of exemptions from Metrics/LineLength:
 ```
 app/controllers/users/omniauth_callbacks_controller.rb
-app/models/user.rb
 ```
-* Add the following lines:
+* Add the following lines to the .rubocop.yml file:
 ```
-Metrics/AbcSize:
-  Exclude:
-    - app/models/user.rb
 
-Lint/AssignmentInCondition:
+Metrics/AbcSize:
   Exclude:
     - app/models/user.rb
 ```
