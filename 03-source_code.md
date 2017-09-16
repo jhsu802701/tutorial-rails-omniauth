@@ -183,7 +183,7 @@ Metrics/AbcSize:
 * Enter the following commands:
 ```
 git add .
-git commit -m "Added Facebook authentication"
+git commit -m "Added omniauth authentication"
 git push origin omniauth
 ```
 * Go to the GitHub repository and click on the "Compare and pull request" button for this branch.
