@@ -62,7 +62,7 @@ Enter the command "git checkout -b omniauth".
     visit root_path
     click_on 'Login'
     login_and_logout_google
-end
+  end
 ```
 * Enter the command "sh test_app.sh".  You'll see the "uninitialized constant OmniauthTest::OmniAuth" errors, a result of not having OmniAuth installed.
 * Enter the command "alias test1='command for running the tests that failed minus the TESTOPTS portion'".
