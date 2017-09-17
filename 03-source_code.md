@@ -25,6 +25,13 @@ Enter the command "git checkout -b omniauth".
     assert page.has_text?('Signed out successfully.')
   end
 
+  def login_and_logout_Google
+    click_on 'Sign in with Google'
+    assert page.has_text?('Successfully authenticated from Google account.')
+    click_on 'Logout'
+    assert page.has_text?('Signed out successfully.')
+  end
+
   test 'Can login with Facebook credentials' do
     OmniAuth.config.mock_auth[:facebook] = OmniAuth::AuthHash.new(
       provider: 'facebook', uid: '123545', confirmed_at: Time.now,
@@ -40,6 +47,22 @@ Enter the command "git checkout -b omniauth".
     click_on 'Login'
     login_and_logout_fb
   end
+
+  test 'Can login with Google credentials' do
+    OmniAuth.config.mock_auth[:google] = OmniAuth::AuthHash.new(
+      provider: 'google', uid: '123546', confirmed_at: Time.now,
+      info: { last_name: 'Brin', first_name: 'Sergey',
+              email: 'sbrin@gmail.com' }
+    )
+    # From home page
+    visit root_path
+    login_and_logout_google
+
+    # From user login page
+    visit root_path
+    click_on 'Login'
+    login_and_logout_google
+end
 ```
 * Enter the command "sh test_app.sh".  You'll see the "uninitialized constant OmniauthTest::OmniAuth" errors, a result of not having OmniAuth installed.
 * Enter the command "alias test1='command for running the tests that failed minus the TESTOPTS portion'".
@@ -53,6 +76,7 @@ Enter the command "git checkout -b omniauth".
 gem 'dotenv-rails' # Needed to export API and secret values into environment variables
 gem 'omniauth'
 gem 'omniauth-facebook'
+gem 'omniauth-google-oauth2'
 # END: omniauth
 ```
 * Enter the command "bundle install".
@@ -61,6 +85,7 @@ gem 'omniauth-facebook'
 gem list "^dotenv-rails$"
 gem list "^omniauth$"
 gem list "^omniauth-facebook$"
+gem list "^omniauth-google-oauth2$"
 ```
 * Pin the version numbers of the omniauth-related gems in your Gemfile.
 * Enter the command "bundle install; test1".  Now the test failures are due to missing hyperlinks.
@@ -70,6 +95,8 @@ gem list "^omniauth-facebook$"
 ```
       <br><br>
       <%= link_to "Sign in with Facebook", user_facebook_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
+      <br><br>
+      <%= link_to "Sign in with Google", user_google_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
 ```
 * Enter the command "test1".  Now the test failures are due to undefined paths.
 
@@ -80,7 +107,7 @@ gem list "^omniauth-facebook$"
 ## User Model
 * In the list of devise modules in app/models/user.rb, add the following attributes to the list of devise modules:
 ```
-:omniauthable, omniauth_providers: [:facebook]
+:omniauthable, omniauth_providers: [:facebook, :google]
 ```
 * Enter the command "test1".  The tests fail because the expected confirmations of successful logins do not occur.  You will need to take several additional actions in order to address this.
 * Go to the tmux window where you are running the local server and restart the server by pressing Ctrl-c and then entering the command "sh server.sh".
@@ -105,6 +132,8 @@ gem list "^omniauth-facebook$"
       # rubocop:disable Lint/AssignmentInCondition
       # rubocop:disable Metrics/LineLength
       if data = session['devise.facebook_data'] && session['devise.facebook_data']['extra']['raw_info']
+        user.email = data['email'] if user.email?
+      elsif data = session['devise.google_data'] && session['devise.google_data']['extra']['raw_info']
         user.email = data['email'] if user.email?
       end
       # rubocop:enable Lint/AssignmentInCondition
@@ -131,6 +160,8 @@ rails generate migration AddOmniauthToUsers provider:string uid:string
 Add the following line just before the last "end" line in config/initializers/devise.rb:
 ```
   config.omniauth :facebook, ENV['FACEBOOK_APP_ID'], ENV['FACEBOOK_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/facebook/callback'
+  config.omniauth :google, ENV['GOOGLE_APP_ID'], ENV['GOOGLE_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/google/callback'
+
 ```
 
 ## app/controllers/users/omniauth_callbacks_controller.rb
@@ -143,6 +174,17 @@ Add the following line just before the last "end" line in config/initializers/de
       set_flash_message(:notice, :success, kind: 'Facebook') if is_navigational_format?
     else
       session['devise.facebook_data'] = request.env['omniauth.auth']
+      redirect_to new_user_registration_url
+    end
+  end
+
+  def google
+    @user = User.from_omniauth(request.env['omniauth.auth'])
+    if @user.persisted?
+      sign_in_and_redirect @user, event: :authentication
+      set_flash_message(:notice, :success, kind: 'Google') if is_navigational_format?
+    else
+      session['devise.google_data'] = request.env['omniauth.auth']
       redirect_to new_user_registration_url
     end
   end
