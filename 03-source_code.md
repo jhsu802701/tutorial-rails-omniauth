@@ -25,7 +25,7 @@ Enter the command "git checkout -b omniauth".
     assert page.has_text?('Signed out successfully.')
   end
 
-  def login_and_logout_Google
+  def login_and_logout_google
     click_on 'Sign in with Google'
     assert page.has_text?('Successfully authenticated from Google account.')
     click_on 'Logout'
