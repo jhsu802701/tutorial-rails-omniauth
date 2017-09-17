@@ -199,8 +199,10 @@ Add the following line just before the last "end" line in config/initializers/de
 ```
 FACEBOOK_APP_ID='APP_ID'
 FACEBOOK_APP_SECRET='APP_SECRET'
+GOOGLE_APP_ID='APP_ID'
+GOOGLE_APP_SECRET='APP_SECRET'
 ```
-* Replace APP_ID and APP_SECRET with the values you saved from your Facebook App dashboard.
+* Replace APP_ID and APP_SECRET with the values you saved from your Omniauth dashboards.
 * NOTE: Because the .env file is NOT in the source code, you must replace it every time you git clone the source code.
 * Enter the command "test1".  Now your tests pass.
 * In the server tmux window, restart your server.
