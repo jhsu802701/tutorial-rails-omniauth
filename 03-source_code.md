@@ -50,7 +50,7 @@ Enter the command "git checkout -b omniauth".
 
   test 'Can login with Google credentials' do
     OmniAuth.config.mock_auth[:google] = OmniAuth::AuthHash.new(
-      provider: 'google', uid: '123546', confirmed_at: Time.now,
+      provider: 'google_oauth2', uid: '123546', confirmed_at: Time.now,
       info: { last_name: 'Brin', first_name: 'Sergey',
               email: 'sbrin@gmail.com' }
     )
@@ -74,7 +74,6 @@ Enter the command "git checkout -b omniauth".
 
 # BEGIN: omniauth
 gem 'dotenv-rails' # Needed to export API and secret values into environment variables
-gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2'
 # END: omniauth
@@ -83,7 +82,6 @@ gem 'omniauth-google-oauth2'
 * Enter the following commands:
 ```
 gem list "^dotenv-rails$"
-gem list "^omniauth$"
 gem list "^omniauth-facebook$"
 gem list "^omniauth-google-oauth2$"
 ```
@@ -96,7 +94,7 @@ gem list "^omniauth-google-oauth2$"
       <br><br>
       <%= link_to "Sign in with Facebook", user_facebook_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
       <br><br>
-      <%= link_to "Sign in with Google", user_google_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
+      <%= link_to "Sign in with Google", user_google_oath2_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
 ```
 * Enter the command "test1".  Now the test failures are due to undefined paths.
 
@@ -107,7 +105,7 @@ gem list "^omniauth-google-oauth2$"
 ## User Model
 * In the list of devise modules in app/models/user.rb, add the following attributes to the list of devise modules:
 ```
-:omniauthable, omniauth_providers: [:facebook, :google]
+:omniauthable, omniauth_providers: [:facebook, :google_oath2]
 ```
 * Enter the command "test1".  The tests fail because the expected confirmations of successful logins do not occur.  You will need to take several additional actions in order to address this.
 * Go to the tmux window where you are running the local server and restart the server by pressing Ctrl-c and then entering the command "sh server.sh".
