@@ -158,8 +158,7 @@ rails generate migration AddOmniauthToUsers provider:string uid:string
 Add the following line just before the last "end" line in config/initializers/devise.rb:
 ```
   config.omniauth :facebook, ENV['FACEBOOK_APP_ID'], ENV['FACEBOOK_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/facebook/callback'
-  config.omniauth :google, ENV['GOOGLE_APP_ID'], ENV['GOOGLE_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/google/callback'
-
+  config.omniauth :google_oauth2, ENV['GOOGLE_APP_ID'], ENV['GOOGLE_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/google/callback'
 ```
 
 ## app/controllers/users/omniauth_callbacks_controller.rb
