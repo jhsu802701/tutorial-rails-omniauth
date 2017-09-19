@@ -30,3 +30,4 @@ http://localhost:3010/
 * After you submit your OAuth consent form, you'll be asked for the application type.  Select "web application", and fill in the appropriate authorized redirect URL.
 * You will now see your client ID and client secret.
 * For easier reference, save your App ID and App Secret in KeePassX (or your preferred password manager).
+* From your app's dashboard, click on "Enable APIs and Services".  Enable the Contacts API and Google+ API.
