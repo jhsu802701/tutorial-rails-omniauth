@@ -105,7 +105,7 @@ gem list "^omniauth-google-oauth2$"
 ## User Model
 * In the list of devise modules in app/models/user.rb, add the following attributes to the list of devise modules:
 ```
-:omniauthable, omniauth_providers: [:facebook, :google_oath2]
+:omniauthable, omniauth_providers: [:facebook, :google_oauth2]
 ```
 * Enter the command "test1".  The tests fail because the expected confirmations of successful logins do not occur.  You will need to take several additional actions in order to address this.
 * Go to the tmux window where you are running the local server and restart the server by pressing Ctrl-c and then entering the command "sh server.sh".
