@@ -190,6 +190,7 @@ Add the following line just before the last "end" line in config/initializers/de
     redirect_to root_path
   end
 ```
+* Enter the command "test1".  Now your tests should pass, but you will won't be able to log in through the OmniAuth services on your local version of your app.  That's because the environment variables needed to provide credentials are not yet provided.
 
 ## .env
 * Add the following content to the .env file:
