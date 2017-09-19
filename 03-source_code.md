@@ -94,7 +94,7 @@ gem list "^omniauth-google-oauth2$"
       <br><br>
       <%= link_to "Sign in with Facebook", user_facebook_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
       <br><br>
-      <%= link_to "Sign in with Google", user_google_oath2_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
+      <%= link_to "Sign in with Google", user_google_oauth2_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
 ```
 * Enter the command "test1".  Now the test failures are due to undefined paths.
 
