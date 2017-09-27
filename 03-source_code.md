@@ -25,9 +25,23 @@ Enter the command "git checkout -b omniauth".
     assert page.has_text?('Signed out successfully.')
   end
 
+  def login_and_logout_github
+    click_on 'Sign in with GitHub'
+    assert page.has_text?('Successfully authenticated from GitHub account.')
+    click_on 'Logout'
+    assert page.has_text?('Signed out successfully.')
+  end
+
   def login_and_logout_google
     click_on 'Sign in with Google'
     assert page.has_text?('Successfully authenticated from Google account.')
+    click_on 'Logout'
+    assert page.has_text?('Signed out successfully.')
+  end
+
+  def login_and_logout_twitter
+    click_on 'Sign in with Twitter'
+    assert page.has_text?('Successfully authenticated from Twitter account.')
     click_on 'Logout'
     assert page.has_text?('Signed out successfully.')
   end
@@ -48,6 +62,22 @@ Enter the command "git checkout -b omniauth".
     login_and_logout_fb
   end
 
+  test 'Can login with GitHub credentials' do
+    OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(
+      provider: 'github', uid: '123457', confirmed_at: Time.now,
+      info: { last_name: 'Wanstrath', first_name: 'Chris',
+              email: 'cwanstrath@github.com' }
+    )
+    # From home page
+    visit root_path
+    login_and_logout_github
+
+    # From user login page
+    visit root_path
+    click_on 'Login'
+    login_and_logout_github
+  end
+
   test 'Can login with Google credentials' do
     OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
       provider: 'google_oauth2', uid: '123546', confirmed_at: Time.now,
@@ -63,6 +93,23 @@ Enter the command "git checkout -b omniauth".
     click_on 'Login'
     login_and_logout_google
   end
+
+  test 'Can login with Twitter credentials' do
+    OmniAuth.config.mock_auth[:twitter] = OmniAuth::AuthHash.new(
+      provider: 'twitter', uid: '124563', confirmed_at: Time.now,
+      info: { last_name: 'Dorsey', first_name: 'Jack',
+              email: 'jdorsey@twitter.com' }
+    )
+    # From home page
+    visit root_path
+    login_and_logout_twitter
+
+    # From user login page
+    visit root_path
+    click_on 'Login'
+    login_and_logout_twitter
+  end
+
 ```
 * Enter the command "sh test_app.sh".  You'll see the "uninitialized constant OmniauthTest::OmniAuth" errors, a result of not having OmniAuth installed.
 * Enter the command "alias test1='command for running the tests that failed minus the TESTOPTS portion'".
@@ -85,7 +132,9 @@ gem 'omniauth-twitter'
 ```
 gem list "^dotenv-rails$"
 gem list "^omniauth-facebook$"
+gem list "^omniauth-github$"
 gem list "^omniauth-google-oauth2$"
+gem list "^omniauth-twitter$"
 ```
 * Pin the version numbers of the omniauth-related gems in your Gemfile.
 * Enter the command "bundle install; test1".  Now the test failures are due to missing hyperlinks.
@@ -96,7 +145,11 @@ gem list "^omniauth-google-oauth2$"
       <br><br>
       <%= link_to "Sign in with Facebook", user_facebook_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
       <br><br>
+      <%= link_to "Sign in with GitHub", user_github_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
+      <br><br>
       <%= link_to "Sign in with Google", user_google_oauth2_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
+      <br><br>
+      <%= link_to "Sign in with Twitter", user_twitter_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
 ```
 * Enter the command "test1".  Now the test failures are due to undefined paths.
 
