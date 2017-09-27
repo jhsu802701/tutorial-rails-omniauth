@@ -164,7 +164,7 @@ Add the following line just before the last "end" line in config/initializers/de
 ```
 
 ## app/controllers/users/omniauth_callbacks_controller.rb
-* In the file app/controllers/users/omniauth_callbacks_controller.rb, add the following lines just before the line "private":
+* In the file app/controllers/users/omniauth_callbacks_controller.rb, add the following lines just before the last "end" statement:
 ```
   def facebook
     @user = User.from_omniauth(request.env['omniauth.auth'])
