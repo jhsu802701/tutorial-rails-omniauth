@@ -115,7 +115,7 @@ gem list "^omniauth-google-oauth2$"
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       t_sec = Time.now.to_f
-      t_usec = (t_sec * 1000000).to_i
+      t_usec = (t_sec * 1_000_000).to_i
       user.username = "user_omni_#{t_usec}"
       user.email = auth.info.email
       user.password = Devise.friendly_token[0, 20]
