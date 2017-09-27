@@ -210,9 +210,7 @@ GOOGLE_APP_SECRET='APP_SECRET'
 
 ## .rubocop.yml
 * Add app/controllers/users/omniauth_callbacks_controller.rb to the list of files exempt from Metrics/LineLength.
-* Add app/models/user.rb to the list of files exempt from Style/SymbolArray, .
-
-* In the .rubocop.yml file, add the following files to the list of exemptions from Metrics/LineLength and Metrics/MethodLength.
+* Add app/models/user.rb to the list of files exempt from Style/SymbolArray.
 * Add the following lines to the .rubocop.yml file:
 ```
 
