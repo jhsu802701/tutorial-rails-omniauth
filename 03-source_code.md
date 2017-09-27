@@ -204,7 +204,6 @@ GOOGLE_APP_SECRET='APP_SECRET'
 ```
 * Replace APP_ID and APP_SECRET with the values you saved from your Omniauth dashboards.
 * NOTE: Because the .env file is NOT in the source code, you must replace it every time you git clone the source code.
-* Enter the command "test1".  Now your tests pass.
 * In the server tmux window, restart your server.
 * In your browser, go to your app and login and logout with each of your OmniAuth services.  You should now be able to do so successfully.
 * Enter the command "sh git_check.sh".  All tests should pass, but there are a few offenses.
