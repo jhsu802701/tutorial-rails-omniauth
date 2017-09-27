@@ -49,7 +49,7 @@ Enter the command "git checkout -b omniauth".
   end
 
   test 'Can login with Google credentials' do
-    OmniAuth.config.mock_auth[:google] = OmniAuth::AuthHash.new(
+    OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
       provider: 'google_oauth2', uid: '123546', confirmed_at: Time.now,
       info: { last_name: 'Brin', first_name: 'Sergey',
               email: 'sbrin@gmail.com' }
