@@ -133,15 +133,11 @@ gem list "^omniauth-google-oauth2$"
 
   def self.new_with_session(params, session)
     super.tap do |user|
-      # rubocop:disable Lint/AssignmentInCondition
-      # rubocop:disable Metrics/LineLength
       if data = session['devise.facebook_data'] && session['devise.facebook_data']['extra']['raw_info']
         user.email = data['email'] if user.email?
       elsif data = session['devise.google_data'] && session['devise.google_data']['extra']['raw_info']
         user.email = data['email'] if user.email?
       end
-      # rubocop:enable Lint/AssignmentInCondition
-      # rubocop:enable Metrics/LineLength
     end
   end
 ```
