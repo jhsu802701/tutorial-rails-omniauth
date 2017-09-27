@@ -75,7 +75,9 @@ Enter the command "git checkout -b omniauth".
 # BEGIN: omniauth
 gem 'dotenv-rails' # Needed to export API and secret values into environment variables
 gem 'omniauth-facebook'
+gem 'omniauth-github'
 gem 'omniauth-google-oauth2'
+gem 'omniauth-twitter'
 # END: omniauth
 ```
 * Enter the command "bundle install".
@@ -161,6 +163,7 @@ Add the following line just before the last "end" line in config/initializers/de
 ```
   config.omniauth :facebook, ENV['FACEBOOK_APP_ID'], ENV['FACEBOOK_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/facebook/callback'
   config.omniauth :google_oauth2, ENV['GOOGLE_APP_ID'], ENV['GOOGLE_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/google/callback'
+  config.omniauth :twitter, ENV['TWITTER_APP_ID'], ENV['TWITTER_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/google/callback'
 ```
 
 ## app/controllers/users/omniauth_callbacks_controller.rb
@@ -188,6 +191,18 @@ Add the following line just before the last "end" line in config/initializers/de
     end
   end
 
+  def twitter
+    @user = User.from_omniauth(request.env['omniauth.auth'])
+    if @user.persisted?
+      sign_in_and_redirect @user, event: :authentication
+      set_flash_message(:notice, :success, kind: 'Twitter') if is_navigational_format?
+    else
+      session['devise.twitter_data'] = request.env['omniauth.auth']
+      redirect_to new_user_registration_url
+    end
+  end
+
+
   def failure
     redirect_to root_path
   end
@@ -199,8 +214,13 @@ Add the following line just before the last "end" line in config/initializers/de
 ```
 FACEBOOK_APP_ID='APP_ID'
 FACEBOOK_APP_SECRET='APP_SECRET'
+GITHUB_APP_ID='APP_ID'
+GITHUB_APP_SECRET='APP_SECRET'
 GOOGLE_APP_ID='APP_ID'
 GOOGLE_APP_SECRET='APP_SECRET'
+TWITTER_APP_ID='APP_ID'
+TWITTER_APP_SECRET='APP_SECRET'
+
 ```
 * Replace APP_ID and APP_SECRET with the values you saved from your Omniauth dashboards.
 * NOTE: Because the .env file is NOT in the source code, you must replace it every time you git clone the source code.
