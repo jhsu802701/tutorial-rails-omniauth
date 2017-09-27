@@ -210,17 +210,30 @@ GOOGLE_APP_SECRET='APP_SECRET'
 * Enter the command "sh git_check.sh".  All tests should pass, but there are a few offenses.
 
 ## .rubocop.yml
-* In the .rubocop.yml file, add the following files to the list of exemptions from Metrics/LineLength:
-```
-app/controllers/users/omniauth_callbacks_controller.rb
-```
+* Add app/controllers/users/omniauth_callbacks_controller.rb to the list of files exempt from Metrics/LineLength.
+* Add app/models/user.rb to the list of files exempt from Style/SymbolArray, .
+
+* In the .rubocop.yml file, add the following files to the list of exemptions from Metrics/LineLength and Metrics/MethodLength.
 * Add the following lines to the .rubocop.yml file:
 ```
 
 Metrics/AbcSize:
   Exclude:
     - app/models/user.rb
+
+Metrics/MethodLength:
+  Exclude:
+    - app/models/user.rb
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - app/models/user.rb
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - app/models/user.rb
 ```
+* Enter the command "sh git_check.sh".  All tests should pass, and there should be no offenses.
 
 
 ## Wrapping Up
