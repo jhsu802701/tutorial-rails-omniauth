@@ -160,7 +160,7 @@ gem list "^omniauth-twitter$"
 ## User Model
 * In the list of devise modules in app/models/user.rb, add the following attributes to the list of devise modules:
 ```
-:omniauthable, omniauth_providers: [:facebook, :google_oauth2]
+:omniauthable, omniauth_providers: [:facebook, :github, :google_oauth2, :twitter]
 ```
 * Enter the command "test1".  The tests fail because the expected confirmations of successful logins do not occur.  You will need to take several additional actions in order to address this.
 * Go to the tmux window where you are running the local server and restart the server by pressing Ctrl-c and then entering the command "sh server.sh".
@@ -190,8 +190,12 @@ gem list "^omniauth-twitter$"
     super.tap do |user|
       if data = session['devise.facebook_data'] && session['devise.facebook_data']['extra']['raw_info']
         user.email = data['email'] if user.email?
+      elsif data = session['devise.github_data'] && session['devise.github_data']['extra']['raw_info']
+        user.email = data['email'] if user.email?
       elsif data = session['devise.google_data'] && session['devise.google_data']['extra']['raw_info']
         user.email = data['email'] if user.email?
+      elsif data = session['devise.twitter_data'] && session['devise.twitter_data']['extra']['raw_info']
+        user.email = data['email'] if user.email?        
       end
     end
   end
@@ -215,6 +219,7 @@ rails generate migration AddOmniauthToUsers provider:string uid:string
 Add the following line just before the last "end" line in config/initializers/devise.rb:
 ```
   config.omniauth :facebook, ENV['FACEBOOK_APP_ID'], ENV['FACEBOOK_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/facebook/callback'
+  config.omniauth :github, ENV['GITHUB_APP_ID'], ENV['GITHUB_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/github/callback'
   config.omniauth :google_oauth2, ENV['GOOGLE_APP_ID'], ENV['GOOGLE_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/google/callback'
   config.omniauth :twitter, ENV['TWITTER_APP_ID'], ENV['TWITTER_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/google/callback'
 ```
@@ -229,6 +234,17 @@ Add the following line just before the last "end" line in config/initializers/de
       set_flash_message(:notice, :success, kind: 'Facebook') if is_navigational_format?
     else
       session['devise.facebook_data'] = request.env['omniauth.auth']
+      redirect_to new_user_registration_url
+    end
+  end
+
+  def github
+    @user = User.from_omniauth(request.env['omniauth.auth'])
+    if @user.persisted?
+      sign_in_and_redirect @user, event: :authentication
+      set_flash_message(:notice, :success, kind: 'GitHub') if is_navigational_format?
+    else
+      session['devise.github_data'] = request.env['omniauth.auth']
       redirect_to new_user_registration_url
     end
   end
@@ -254,7 +270,6 @@ Add the following line just before the last "end" line in config/initializers/de
       redirect_to new_user_registration_url
     end
   end
-
 
   def failure
     redirect_to root_path
