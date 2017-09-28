@@ -25,23 +25,9 @@ Enter the command "git checkout -b omniauth".
     assert page.has_text?('Signed out successfully.')
   end
 
-  def login_and_logout_github
-    click_on 'Sign in with GitHub'
-    assert page.has_text?('Successfully authenticated from GitHub account.')
-    click_on 'Logout'
-    assert page.has_text?('Signed out successfully.')
-  end
-
   def login_and_logout_google
     click_on 'Sign in with Google'
     assert page.has_text?('Successfully authenticated from Google account.')
-    click_on 'Logout'
-    assert page.has_text?('Signed out successfully.')
-  end
-
-  def login_and_logout_twitter
-    click_on 'Sign in with Twitter'
-    assert page.has_text?('Successfully authenticated from Twitter account.')
     click_on 'Logout'
     assert page.has_text?('Signed out successfully.')
   end
@@ -62,22 +48,6 @@ Enter the command "git checkout -b omniauth".
     login_and_logout_fb
   end
 
-  test 'Can login with GitHub credentials' do
-    OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(
-      provider: 'github', uid: '123457', confirmed_at: Time.now,
-      info: { last_name: 'Wanstrath', first_name: 'Chris',
-              email: 'cwanstrath@github.com' }
-    )
-    # From home page
-    visit root_path
-    login_and_logout_github
-
-    # From user login page
-    visit root_path
-    click_on 'Login'
-    login_and_logout_github
-  end
-
   test 'Can login with Google credentials' do
     OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
       provider: 'google_oauth2', uid: '123546', confirmed_at: Time.now,
@@ -93,23 +63,6 @@ Enter the command "git checkout -b omniauth".
     click_on 'Login'
     login_and_logout_google
   end
-
-  test 'Can login with Twitter credentials' do
-    OmniAuth.config.mock_auth[:twitter] = OmniAuth::AuthHash.new(
-      provider: 'twitter', uid: '124563', confirmed_at: Time.now,
-      info: { last_name: 'Dorsey', first_name: 'Jack',
-              email: 'jdorsey@twitter.com' }
-    )
-    # From home page
-    visit root_path
-    login_and_logout_twitter
-
-    # From user login page
-    visit root_path
-    click_on 'Login'
-    login_and_logout_twitter
-  end
-
 ```
 * Enter the command "sh test_app.sh".  You'll see the "uninitialized constant OmniauthTest::OmniAuth" errors, a result of not having OmniAuth installed.
 * Enter the command "alias test1='command for running the tests that failed minus the TESTOPTS portion'".
@@ -122,9 +75,7 @@ Enter the command "git checkout -b omniauth".
 # BEGIN: omniauth
 gem 'dotenv-rails' # Needed to export API and secret values into environment variables
 gem 'omniauth-facebook'
-gem 'omniauth-github'
 gem 'omniauth-google-oauth2'
-gem 'omniauth-twitter'
 # END: omniauth
 ```
 * Enter the command "bundle install".
@@ -132,9 +83,7 @@ gem 'omniauth-twitter'
 ```
 gem list "^dotenv-rails$"
 gem list "^omniauth-facebook$"
-gem list "^omniauth-github$"
 gem list "^omniauth-google-oauth2$"
-gem list "^omniauth-twitter$"
 ```
 * Pin the version numbers of the omniauth-related gems in your Gemfile.
 * Enter the command "bundle install; test1".  Now the test failures are due to missing hyperlinks.
@@ -145,11 +94,7 @@ gem list "^omniauth-twitter$"
       <br><br>
       <%= link_to "Sign in with Facebook", user_facebook_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
       <br><br>
-      <%= link_to "Sign in with GitHub", user_github_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
-      <br><br>
       <%= link_to "Sign in with Google", user_google_oauth2_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
-      <br><br>
-      <%= link_to "Sign in with Twitter", user_twitter_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
 ```
 * Enter the command "test1".  Now the test failures are due to undefined paths.
 
@@ -160,7 +105,7 @@ gem list "^omniauth-twitter$"
 ## User Model
 * In the list of devise modules in app/models/user.rb, add the following attributes to the list of devise modules:
 ```
-:omniauthable, omniauth_providers: [:facebook, :github, :google_oauth2, :twitter]
+:omniauthable, omniauth_providers: [:facebook, :google_oauth2]
 ```
 * Enter the command "test1".  The tests fail because the expected confirmations of successful logins do not occur.  You will need to take several additional actions in order to address this.
 * Go to the tmux window where you are running the local server and restart the server by pressing Ctrl-c and then entering the command "sh server.sh".
@@ -190,17 +135,13 @@ gem list "^omniauth-twitter$"
     super.tap do |user|
       if data = session['devise.facebook_data'] && session['devise.facebook_data']['extra']['raw_info']
         user.email = data['email'] if user.email?
-      elsif data = session['devise.github_data'] && session['devise.github_data']['extra']['raw_info']
-        user.email = data['email'] if user.email?
       elsif data = session['devise.google_data'] && session['devise.google_data']['extra']['raw_info']
         user.email = data['email'] if user.email?
-      elsif data = session['devise.twitter_data'] && session['devise.twitter_data']['extra']['raw_info']
-        user.email = data['email'] if user.email?        
       end
     end
   end
 ```
-* Please note that each user MUST have an email address, password, last name, first name, and username.  In addition, a user must be confirmed in order to log in.  Therefore, the self.from_omniauth provides these parameters for those who wish to login to the app with Facebook, Google, or other external services.
+* Please note that each user MUST have an email address, password, last name, first name, and username.  In addition, a user must be confirmed in order to log in.  Therefore, the self.from_omniauth provides these parameters for those who wish to login to the app.
 
 ## config/environments/test.rb
 Edit the file config/environments/test.rb and add the following line just before the final "end" statement:
@@ -219,9 +160,7 @@ rails generate migration AddOmniauthToUsers provider:string uid:string
 Add the following line just before the last "end" line in config/initializers/devise.rb:
 ```
   config.omniauth :facebook, ENV['FACEBOOK_APP_ID'], ENV['FACEBOOK_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/facebook/callback'
-  config.omniauth :github, ENV['GITHUB_APP_ID'], ENV['GITHUB_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/github/callback'
   config.omniauth :google_oauth2, ENV['GOOGLE_APP_ID'], ENV['GOOGLE_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/google/callback'
-  config.omniauth :twitter, ENV['TWITTER_APP_ID'], ENV['TWITTER_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/google/callback'
 ```
 
 ## app/controllers/users/omniauth_callbacks_controller.rb
@@ -238,17 +177,6 @@ Add the following line just before the last "end" line in config/initializers/de
     end
   end
 
-  def github
-    @user = User.from_omniauth(request.env['omniauth.auth'])
-    if @user.persisted?
-      sign_in_and_redirect @user, event: :authentication
-      set_flash_message(:notice, :success, kind: 'GitHub') if is_navigational_format?
-    else
-      session['devise.github_data'] = request.env['omniauth.auth']
-      redirect_to new_user_registration_url
-    end
-  end
-
   def google_oauth2
     @user = User.from_omniauth(request.env['omniauth.auth'])
     if @user.persisted?
@@ -256,17 +184,6 @@ Add the following line just before the last "end" line in config/initializers/de
       set_flash_message(:notice, :success, kind: 'Google') if is_navigational_format?
     else
       session['devise.google_data'] = request.env['omniauth.auth']
-      redirect_to new_user_registration_url
-    end
-  end
-
-  def twitter
-    @user = User.from_omniauth(request.env['omniauth.auth'])
-    if @user.persisted?
-      sign_in_and_redirect @user, event: :authentication
-      set_flash_message(:notice, :success, kind: 'Twitter') if is_navigational_format?
-    else
-      session['devise.twitter_data'] = request.env['omniauth.auth']
       redirect_to new_user_registration_url
     end
   end
@@ -282,13 +199,8 @@ Add the following line just before the last "end" line in config/initializers/de
 ```
 FACEBOOK_APP_ID='APP_ID'
 FACEBOOK_APP_SECRET='APP_SECRET'
-GITHUB_APP_ID='APP_ID'
-GITHUB_APP_SECRET='APP_SECRET'
 GOOGLE_APP_ID='APP_ID'
 GOOGLE_APP_SECRET='APP_SECRET'
-TWITTER_APP_ID='APP_ID'
-TWITTER_APP_SECRET='APP_SECRET'
-
 ```
 * Replace APP_ID and APP_SECRET with the values you saved from your Omniauth dashboards.
 * NOTE: Because the .env file is NOT in the source code, you must replace it every time you git clone the source code.
