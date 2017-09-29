@@ -1,7 +1,7 @@
-# Chapter 3: Updating the Source Code
+# Chapter 3: OmniAuth Logins
 
 ## New Branch
-Enter the command "git checkout -b omniauth".
+Enter the command "git checkout -b omniauth_login".
 
 ## .gitignore
 * Enter the command "touch .env".  This is where you will later add the environment variables needed for OmniAuth services.
@@ -239,7 +239,7 @@ Metrics/PerceivedComplexity:
 ```
 git add .
 git commit -m "Added omniauth authentication"
-git push origin omniauth
+git push origin omniauth_login
 ```
 * Go to the GitHub repository and click on the "Compare and pull request" button for this branch.
 * When you see that your app passes in contiuous integration, accept this pull request to merge it with the master branch.
@@ -247,5 +247,5 @@ git push origin omniauth
 ```
 git checkout master
 git pull
-sh heroku.sh
 ```
+* Enter the command "sh heroku.sh".
