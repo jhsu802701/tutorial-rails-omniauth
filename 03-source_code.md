@@ -192,7 +192,8 @@ Add the following line just before the last "end" line in config/initializers/de
     redirect_to root_path
   end
 ```
-* Enter the command "test1".  Now your tests should pass, but you will won't be able to log in through the OmniAuth services on your local version of your app.  That's because the environment variables needed to provide credentials are not yet provided.
+* Enter the command "test1".  Now your tests should pass, but you're not finished yet.
+* Restart the local Rails server and view your app.  When you try to log in through Facebook, you'll get the error message "The parameter app_id is required."  When you try to log in through Google, you'll get an error message saying that you made an invalid request.  Your app needs to the right credentials in order to log in with Facebook or Google.
 
 ## .env
 * Add the following content to the .env file:
