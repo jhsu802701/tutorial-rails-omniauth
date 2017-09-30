@@ -249,4 +249,4 @@ git push origin omniauth_login
 git checkout master
 git pull
 ```
-* Enter the command "sh heroku.sh".  You won't be able to login from Facebook or Google just yet.  (The next chapter will take care of this.)
+* Enter the command "sh heroku.sh".  In your production site, you won't be able to login from Facebook or Google just yet.  (You will take care of this in the next chapter.)
