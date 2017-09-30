@@ -11,6 +11,7 @@ Enter the command "git checkout -b omniauth_login".
 
 # Keep OmniAuth credentials out of the source code
 .env
+.env*
 ```
 * Enter the command "git status".  You'll see that .gitignore has changed, but .env is no longer mentioned.
 
