@@ -62,3 +62,5 @@ git checkout master
 git pull
 ```
 * Enter the command "sh heroku.sh".
+* Enter the command "heroku run sh config_env.sh".  Enter the OmniAuth credentials when requested.
+* You should now be able to login to your app on Heroku with Facebook and Google.
