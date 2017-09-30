@@ -15,8 +15,8 @@ Enter the command "git checkout -b omniauth_login".
 * Enter the command "git status".  You'll see that .gitignore has changed, but .env is no longer mentioned.
 
 ## Integration Tests
-* Enter the command "rails generate integration_test omniauth".
-* Edit the file test/integration/omniauth_test.rb and replace the section between "class OmniauthTest < ActionDispatch::IntegrationTest" and the last "end" with the following code:
+* Enter the command "rails generate integration_test omniauth_login".
+* Edit the file test/integration/omniauth_test.rb and replace the section between "class OmniauthLoginTest < ActionDispatch::IntegrationTest" and the last "end" with the following code:
 ```
   def login_and_logout_fb
     click_on 'Sign in with Facebook'
