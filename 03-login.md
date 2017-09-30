@@ -141,7 +141,7 @@ gem list "^omniauth-google-oauth2$"
     end
   end
 ```
-* Please note that each user MUST have an email address, password, last name, first name, and username.  In addition, a user must be confirmed in order to log in.  Therefore, the self.from_omniauth provides these parameters for those who wish to login to the app.
+* Please note that each user MUST have an email address, password, last name, first name, and username.  In addition, a user must be confirmed in order to log in.  Therefore, the self.from_omniauth definition provides these parameters for those who wish to login to the app.
 
 ## config/environments/test.rb
 Edit the file config/environments/test.rb and add the following line just before the final "end" statement:
