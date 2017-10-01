@@ -123,8 +123,8 @@ gem list "^omniauth-google-oauth2$"
       user.confirmed_at = Time.now
       name_auth = auth.info.name
       name_auth_array = name_auth.gsub(/\s+/m, ' ').strip.split(' ')
-      user.last_name = name_auth_array.first
-      user.first_name = name_auth_array.last
+      user.last_name = name_auth_array.last
+      user.first_name = name_auth_array.first
       if auth.provider == 'google'
         user.last_name = auth.info.last_name
         user.first_name = auth.info.first_name
