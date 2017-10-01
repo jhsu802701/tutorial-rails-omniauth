@@ -252,4 +252,5 @@ git pull
 ```
 * Enter the command "sh heroku.sh".  In your production site, you won't be able to login from Facebook or Google just yet.  You have not yet entered the proper credentials in Heroku.
 * In your browser, log into Heroku.  Go to your app, go to the settings tab, and click on "Reveal Config Vars".  Add the environment variables listed in your .env file, and give them the appropriate values.
+* In the terminal, enter the command "heroku restart" and then wait a moment.
 * You now should be able to log into your site with Facebook or OmniAuth in Heroku.
