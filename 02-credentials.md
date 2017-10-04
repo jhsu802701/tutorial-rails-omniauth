@@ -7,9 +7,20 @@ Allowing users to log into your app with Facebook, Google, or other external aut
 * Create a new app.  Fill in the name of your app with the same name you've been using in GitHub and Heroku.
 * Go to the Dashboard to see the App ID and App Secret.
 * For easier reference, save your App ID and App Secret in KeePassX (or your preferred password manager).
-* From your app's Dashboard, add the Facebook Login feature (which is under Products).  In the list of "Valid OAuth redirect URIs", the one and only one URL should be the following:
+* From your app's Dashboard, add the Facebook Login feature (which is under Products).  In the list of "Valid OAuth redirect URIs", the enter the following production environment URL and multiple potential development environment URLs:
 ```
 https://(base URL)/users/auth/facebook/callback
+http://localhost:3000/users/auth/facebook/callback
+http://localhost:3001/users/auth/facebook/callback
+http://localhost:3002/users/auth/facebook/callback
+http://localhost:3003/users/auth/facebook/callback
+http://localhost:3004/users/auth/facebook/callback
+http://localhost:3005/users/auth/facebook/callback
+http://localhost:3006/users/auth/facebook/callback
+http://localhost:3007/users/auth/facebook/callback
+http://localhost:3008/users/auth/facebook/callback
+http://localhost:3009/users/auth/facebook/callback
+http://localhost:3010/users/auth/facebook/callback
 ```
 
 ## Google
