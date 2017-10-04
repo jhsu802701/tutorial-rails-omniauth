@@ -160,8 +160,8 @@ rails generate migration AddOmniauthToUsers provider:string uid:string
 ## config/initializers/devise.rb
 Add the following line just before the last "end" line in config/initializers/devise.rb:
 ```
-  config.omniauth :facebook, ENV['FACEBOOK_APP_ID'], ENV['FACEBOOK_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/facebook/callback'
-  config.omniauth :google_oauth2, ENV['GOOGLE_APP_ID'], ENV['GOOGLE_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/google/callback'
+  config.omniauth :facebook, ENV['FACEBOOK_ID'], ENV['FACEBOOK_SECRET'], callback_url: 'http://localhost:3000/users/auth/facebook/callback'
+  config.omniauth :google_oauth2, ENV['GOOGLE_ID'], ENV['GOOGLE_SECRET'], callback_url: 'http://localhost:3000/users/auth/google/callback'
 ```
 
 ## app/controllers/users/omniauth_callbacks_controller.rb
@@ -199,12 +199,12 @@ Add the following line just before the last "end" line in config/initializers/de
 ## .env
 * Add the following content to the .env file:
 ```
-FACEBOOK_APP_ID='APP_ID'
-FACEBOOK_APP_SECRET='APP_SECRET'
-GOOGLE_APP_ID='APP_ID'
-GOOGLE_APP_SECRET='APP_SECRET'
+FACEBOOK_ID='ID'
+FACEBOOK_SECRET='SECRET'
+GOOGLE_ID='ID'
+GOOGLE_SECRET='SECRET'
 ```
-* Replace APP_ID and APP_SECRET with the values you saved from your Omniauth dashboards.
+* Replace "ID" and "SECRET" with the values you saved from your Omniauth dashboards.
 * NOTE: Because the .env file is NOT in the source code, you must replace it every time you git clone the source code.
 * In the server tmux window, restart your server.
 * In your browser, go to your app and login and logout with each of your OmniAuth services.  You should now be able to do so successfully.
