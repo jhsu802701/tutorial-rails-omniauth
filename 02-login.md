@@ -153,7 +153,7 @@ gem list "^omniauth-twitter$"
 ```
 * Enter the command "test1".  The tests fail because the expected confirmations of successful logins do not occur.  You will need to take several additional actions in order to address this.
 * Go to the tmux window where you are running the local server and restart the server by pressing Ctrl-c and then entering the command "sh server.sh".
-* In your browser, go to the home page of your app and then try to sign in with any of the OmniAuth services.  In your browser, you will get the message "Not found. Authentication passthru."  You'll see that your local server shows a 404 (not found) error.
+* In your browser, go to the home page of your app and then try to sign in with any of the OmniAuth services.  In your browser, you will get the message "Not found. Authentication passthru."  You'll see that your local server shows a 404 (not found) error.  At this point, you will no longer see any useful information in your browser for the rest of this chapter.
 * Just before the end of the public section, add the following lines:
 ```
   def self.from_omniauth(auth)
@@ -190,12 +190,6 @@ gem list "^omniauth-twitter$"
   end
 ```
 * Please note that each user MUST have an email address, password, last name, first name, and username.  In addition, a user must be confirmed in order to log in.  Therefore, the self.from_omniauth definition provides these parameters for those who wish to login to the app.
-
-## config/environments/test.rb
-Edit the file config/environments/test.rb and add the following line just before the final "end" statement:
-```
-  OmniAuth.config.test_mode = true
-```
 
 ## User Parameters
 * Add the provider and uid parameters to the user model by entering the following command:
@@ -266,6 +260,12 @@ Add the following line just before the last "end" line in config/initializers/de
 ```
 * Enter the command "test1".  Now your tests should pass, but you're not finished yet.
 * Restart the local Rails server and view your app.  When you try to log in through Facebook, you'll get the error message "The parameter app_id is required."  When you try to log in through Google, you'll get an error message saying that you made an invalid request.  Your app needs to the right credentials in order to log in with Facebook or Google.
+
+## config/environments/test.rb
+Edit the file config/environments/test.rb and add the following line just before the final "end" statement:
+```
+  OmniAuth.config.test_mode = true
+```
 
 ## .rubocop.yml
 * Add app/controllers/users/omniauth_callbacks_controller.rb to the list of files exempt from Metrics/LineLength.
