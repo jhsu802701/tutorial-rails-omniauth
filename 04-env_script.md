@@ -5,6 +5,18 @@ In the previous chapter, you had to set the environment variables in the .env fi
 ## New Branch
 Enter the command "git checkout -b omniauth_env_script".
 
+## .gitignore
+* Enter the command "touch .env".  This is where you will later add the environment variables needed for OmniAuth services.
+* Enter the command "git status".  You'll see that .env is an untracked file.
+* Add the following lines to the end of the .gitignore file:
+```
+
+# Keep OmniAuth credentials out of the source code
+.env
+.env*
+```
+* Enter the command "git status".  You'll see that .gitignore has changed, but .env is no longer mentioned.
+
 ## dot_env.txt
 Create the file dot_env.txt and give it the following content:
 ```
