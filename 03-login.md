@@ -175,7 +175,7 @@ Add the following line just before the last "end" line in config/initializers/de
   config.omniauth :facebook, ENV['FACEBOOK_ID'], ENV['FACEBOOK_SECRET'], callback_url: 'http://localhost:3000/users/auth/facebook/callback'
   config.omniauth :github, ENV['GITHUB_ID'], ENV['GITHUB_SECRET'], callback_url: 'http://localhost:3000/users/auth/github/callback'
   config.omniauth :google_oauth2, ENV['GOOGLE_ID'], ENV['GOOGLE_SECRET'], callback_url: 'http://localhost:3000/users/auth/google/callback'
-  config.omniauth :facebook, ENV['TWITTER_ID'], ENV['TWITTER_SECRET'], callback_url: 'http://localhost:3000/users/auth/twitter/callback'
+  config.omniauth :twitter, ENV['TWITTER_ID'], ENV['TWITTER_SECRET'], callback_url: 'http://localhost:3000/users/auth/twitter/callback'
 ```
 
 ## app/controllers/users/omniauth_callbacks_controller.rb
