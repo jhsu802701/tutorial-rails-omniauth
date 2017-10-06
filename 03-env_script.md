@@ -1,6 +1,6 @@
-# Chapter 4: OmniAuth Environment Variables Script
+# Chapter 3: OmniAuth Environment Variables Script
 
-In the previous chapter, you had to set the environment variables in the .env file manually.  In this chapter, you will provide a script for doing this and run it in Heroku so that users will be able to log in with Facebook or Google.  (So far, OmniAuth logins only work in the development and test environments.)
+In this chapter, you will provide the environment variables needed for OmniAuth capabilities.
 
 ## New Branch
 Enter the command "git checkout -b omniauth_env_script".
