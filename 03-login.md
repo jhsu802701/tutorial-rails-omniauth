@@ -1,19 +1,9 @@
-# Chapter 3: OmniAuth Logins
+# Chapter 2: OmniAuth Login Tests
+
+In this chapter, you will provide OmniAuth login capabilities in the test environment.  The OmniAuth logins will NOT work in the development or production environments yet.  (You will provide this capability in later chapters.)
 
 ## New Branch
-Enter the command "git checkout -b omniauth_login".
-
-## .gitignore
-* Enter the command "touch .env".  This is where you will later add the environment variables needed for OmniAuth services.
-* Enter the command "git status".  You'll see that .env is an untracked file.
-* Add the following lines to the end of the .gitignore file:
-```
-
-# Keep OmniAuth credentials out of the source code
-.env
-.env*
-```
-* Enter the command "git status".  You'll see that .gitignore has changed, but .env is no longer mentioned.
+Enter the command "git checkout -b omniauth_login_tests".
 
 ## Integration Tests
 * Enter the command "rails generate integration_test omniauth_login".
@@ -26,6 +16,13 @@ Enter the command "git checkout -b omniauth_login".
     assert page.has_text?('Signed out successfully.')
   end
 
+  def login_and_logout_github
+    click_on 'Sign in with GitHub'
+    assert page.has_text?('Successfully authenticated from GitHub account.')
+    click_on 'Logout'
+    assert page.has_text?('Signed out successfully.')
+  end
+
   def login_and_logout_google
     click_on 'Sign in with Google'
     assert page.has_text?('Successfully authenticated from Google account.')
@@ -33,9 +30,17 @@ Enter the command "git checkout -b omniauth_login".
     assert page.has_text?('Signed out successfully.')
   end
 
+  def login_and_logout_twitter
+    click_on 'Sign in with Twitter'
+    puts page.body
+    assert page.has_text?('Successfully authenticated from Twitter account.')
+    click_on 'Logout'
+    assert page.has_text?('Signed out successfully.')
+  end
+
   test 'Can login with Facebook credentials' do
     OmniAuth.config.mock_auth[:facebook] = OmniAuth::AuthHash.new(
-      provider: 'facebook', uid: '123545', confirmed_at: Time.now,
+      provider: 'facebook', uid: '100001', confirmed_at: Time.now,
       info: { last_name: 'Zuckerberg', first_name: 'Mark',
               email: 'mzuckerberg@facebook.com' }
     )
@@ -49,9 +54,25 @@ Enter the command "git checkout -b omniauth_login".
     login_and_logout_fb
   end
 
+  test 'Can login with GitHub credentials' do
+    OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(
+      provider: 'github', uid: '100002', confirmed_at: Time.now,
+      info: { last_name: 'Wanstrath', first_name: 'Chris',
+              email: 'cwanstrath@github.com' }
+    )
+    # From home page
+    visit root_path
+    login_and_logout_github
+
+    # From user login page
+    visit root_path
+    click_on 'Login'
+    login_and_logout_github
+  end
+
   test 'Can login with Google credentials' do
     OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
-      provider: 'google_oauth2', uid: '123546', confirmed_at: Time.now,
+      provider: 'google_oauth2', uid: '100003', confirmed_at: Time.now,
       info: { last_name: 'Brin', first_name: 'Sergey',
               email: 'sbrin@gmail.com' }
     )
@@ -63,6 +84,22 @@ Enter the command "git checkout -b omniauth_login".
     visit root_path
     click_on 'Login'
     login_and_logout_google
+  end
+
+  test 'Can login with Twitter credentials' do
+    OmniAuth.config.mock_auth[:twitter] = OmniAuth::AuthHash.new(
+      provider: 'twitter', uid: '100004', confirmed_at: Time.now,
+      info: { last_name: 'Dorsey', first_name: 'Jack',
+              email: 'jdorsey@twitter.com' }
+    )
+    # From home page
+    visit root_path
+    login_and_logout_twitter
+
+    # From user login page
+    visit root_path
+    click_on 'Login'
+    login_and_logout_twitter
   end
 ```
 * Enter the command "sh test_app.sh".  You'll see the "uninitialized constant OmniauthTest::OmniAuth" errors, a result of not having OmniAuth installed.
@@ -232,20 +269,6 @@ Add the following line just before the last "end" line in config/initializers/de
 * Enter the command "test1".  Now your tests should pass, but you're not finished yet.
 * Restart the local Rails server and view your app.  When you try to log in through Facebook, you'll get the error message "The parameter app_id is required."  When you try to log in through Google, you'll get an error message saying that you made an invalid request.  Your app needs to the right credentials in order to log in with Facebook or Google.
 
-## .env
-* Add the following content to the .env file:
-```
-FACEBOOK_ID='ID'
-FACEBOOK_SECRET='SECRET'
-GOOGLE_ID='ID'
-GOOGLE_SECRET='SECRET'
-```
-* Replace "ID" and "SECRET" with the values you saved from your Omniauth dashboards.
-* NOTE: Because the .env file is NOT in the source code, you must replace it every time you git clone the source code.
-* In the server tmux window, restart your server.
-* In your browser, go to your app and login and logout with each of your OmniAuth services.  You should now be able to do so successfully.
-* Enter the command "sh git_check.sh".  All tests should pass, but there are a few offenses.
-
 ## .rubocop.yml
 * Add app/controllers/users/omniauth_callbacks_controller.rb to the list of files exempt from Metrics/LineLength.
 * Add app/models/user.rb to the list of files exempt from Style/SymbolArray.
@@ -270,13 +293,12 @@ Metrics/PerceivedComplexity:
 ```
 * Enter the command "sh git_check.sh".  All tests should pass, and there should be no offenses.
 
-
 ## Wrapping Up
 * Enter the following commands:
 ```
 git add .
 git commit -m "Added omniauth authentication"
-git push origin omniauth_login
+git push origin omniauth_login_tests
 ```
 * Go to the GitHub repository and click on the "Compare and pull request" button for this branch.
 * Code Climate will flag this branch because of the similarities between the facebook and google_oauth2 definitions in  app/controllers/users/omniauth_callbacks_controller.rb.  Mark this issue as "Wontfix".
