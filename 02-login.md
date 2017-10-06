@@ -111,7 +111,6 @@ Enter the command "git checkout -b omniauth_login_tests".
 ```
 
 # BEGIN: omniauth
-gem 'dotenv-rails' # Needed to export API and secret values into environment variables
 gem 'omniauth-facebook'
 gem 'omniauth-github'
 gem 'omniauth-google-oauth2'
@@ -121,7 +120,6 @@ gem 'omniauth-twitter'
 * Enter the command "bundle install".
 * Enter the following commands:
 ```
-gem list "^dotenv-rails$"
 gem list "^omniauth-facebook$"
 gem list "^omniauth-github$"
 gem list "^omniauth-google-oauth2$"
