@@ -26,6 +26,16 @@ GOOGLE_APP_ID='INSERT_GOOGLE_APP_ID'
 GOOGLE_APP_SECRET='INSERT_GOOGLE_APP_SECRET'
 ```
 
+## Gemfile
+* Enter the following line to the Gemfile:
+```
+gem 'dotenv-rails' # Needed to export ID and secret values into environment variables
+```
+* Enter the command "bundle install".
+* Enter the command "^dotenv-rails$".
+* Pin the version number of the dotenv-rails gem in your Gemfile.
+* Enter the command "bundle install".
+
 ## config_env.sh
 * Create the file config_env.sh and give it the following content:
 ```
