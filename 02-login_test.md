@@ -279,13 +279,6 @@ Processing by Users::OmniauthCallbacksController#passthru as HTML
 * Enter the command "rails db:migrate".
 * Enter the command "test1".  Now all the tests pass.
 
-## User Parameters
-* Add the provider and uid parameters to the user model by entering the following command:
-```
-rails generate migration AddOmniauthToUsers provider:string uid:string
-```
-* Enter the command "rails db:migrate".
-
 ## .rubocop.yml
 * Add app/controllers/users/omniauth_callbacks_controller.rb to the list of files exempt from Metrics/LineLength.
 * Add app/models/user.rb to the list of files exempt from Style/SymbolArray.
