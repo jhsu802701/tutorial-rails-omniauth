@@ -151,10 +151,11 @@ gem list "^omniauth-twitter$"
 ```
 :omniauthable, omniauth_providers: [:facebook, :github, :google_oauth2, :twitter]
 ```
-* Enter the command "test1".  The tests fail because the expected confirmations of successful logins do not occur.  You will need to take several additional actions in order to address this, but the screen output you see when you enter the command "test1" will have no troubleshooting value for the rest of this chapter.
+* Enter the command "test1".  The tests fail because the expected confirmations of successful logins do not occur.
 * Go to the tmux window where you are running the local server and restart the server by pressing Ctrl-c and then entering the command "sh server.sh".
-* In your browser, go to the home page of your app and then try to sign in with any of the OmniAuth services.  In your browser, you will get the message "Not found. Authentication passthru."  You'll see that your local server shows a 404 (not found) error.  At this point, you will no longer see any useful information in your browser for the rest of this chapter.
-* Open the file log/test.log, which you will rely on for troubleshooting during the rest of this chapter.  You'll see a more detailed view of what happens during the tests than what the standard screen output shows.  At this point, clicking on any of the links to login with the OmniAuth services leads to a 404 (not found) error.
+* In your browser, go to the home page of your app and then try to sign in with any of the OmniAuth services.  In your browser, you will get the message "Not found. Authentication passthru."  
+* You'll see that your local server shows a 404 (not found) error.
+* Open the file log/test.log, which you will rely on heavily for troubleshooting during the rest of this chapter.  You'll see a more detailed view of what happens during the tests than what the standard screen output shows.  At this point, clicking on any of the links to login with the OmniAuth services leads to a 404 (not found) error.
 * The error messages in each of the 4 failed tests is:
 ```
 Completed 404 Not Found
@@ -172,14 +173,28 @@ Processing by Users::OmniauthCallbacksController#passthru as HTML
   * Started GET "/users/auth/twitter"
 
 ## config/initializers/devise.rb
-Add the following line just before the last "end" line in config/initializers/devise.rb:
+* Add the following line just before the last "end" line in config/initializers/devise.rb:
 ```
   config.omniauth :facebook, ENV['FACEBOOK_ID'], ENV['FACEBOOK_SECRET'], callback_url: 'http://localhost:3000/users/auth/facebook/callback'
   config.omniauth :github, ENV['GITHUB_ID'], ENV['GITHUB_SECRET'], callback_url: 'http://localhost:3000/users/auth/github/callback'
   config.omniauth :google_oauth2, ENV['GOOGLE_ID'], ENV['GOOGLE_SECRET'], callback_url: 'http://localhost:3000/users/auth/google/callback'
   config.omniauth :twitter, ENV['TWITTER_ID'], ENV['TWITTER_SECRET'], callback_url: 'http://localhost:3000/users/auth/twitter/callback'
 ```
+* Enter the command "test1".  In the screen output, you'll see that the Facebook test fails because no route matches "/v2.6/dialog/oauth", the GitHub test fails because no route matches "/login/oauth/authorize", the Google test fails because no route matches "/o/oauth2/auth" for the Google test, and the Twitter test fails with a code 400 (bad request).
+* Restart the local server, and then go to your local version of the app.
+  * When you try to login with Facebook, you end up on a Facebook page with the error message "The parameter app_id is required".
+  * When you try to login with GitHub, you end up on a GitHub page with the 404 (not found) error message.
+  * When you try to login with Google, you end up on a Google page with a 400 error and messages telling you that you made an invalid request and are missing the client_id parameter.
+  * When you try to login with Twitter, you remain on your localhost with a 400 (bad request) error message.
+* In other words, you are missing the parameters required.  For the development and production environments, you'll provide the parameters later.  The next step is to address this issue in the test environment.
 
+## config/environments/test.rb
+* Edit the file config/environments/test.rb and add the following line just before the final "end" statement:
+```
+  OmniAuth.config.test_mode = true
+```
+* This change bails you out of the need to provide the parameters in the test environment.
+* Enter the command "test1".  Now the tests fail because the facebook, github, google_oauth2, and twitter actions are missing in the user OmniAuth callbacks controller.
 
 ## app/controllers/users/omniauth_callbacks_controller.rb
 * In the file app/controllers/users/omniauth_callbacks_controller.rb, add the following lines just before the last "end" statement:
@@ -232,10 +247,9 @@ Add the following line just before the last "end" line in config/initializers/de
     redirect_to root_path
   end
 ```
-* Enter the command "test1".  Now your tests should pass, but you're not finished yet.
-* Restart the local Rails server and view your app.  When you try to log in through Facebook, you'll get the error message "The parameter app_id is required."  When you try to log in through Google, you'll get an error message saying that you made an invalid request.  Your app needs to the right credentials in order to log in with Facebook or Google.
+* Enter the command "test1".  Now your tests fail because the from_omniauth method is missing in the user model.
 
-## Other User Model Updates
+## Adding the from_omniauth Method to the User Model
 * Just before the end of the public section of app/models/user.rb, add the following lines:
 ```
   def self.from_omniauth(auth)
@@ -256,7 +270,19 @@ Add the following line just before the last "end" line in config/initializers/de
       end
     end
   end
+```
+* Enter the command "test1".  Now the tests fail because the provider parameter is missing from the user model.
 
+## Adding User Parameters
+* Enter the command "rails generate migration AddProviderToUsers provider:string".
+* Enter the command "rails db:migrate".
+* Enter the command "test1".  Now the tests fail because the uid parameter is missing from the user model.
+* Enter the command "rails generate migration AddUIDToUsers uid:string"
+* Enter the command "rails db:migrate".
+* Enter the command "test1".  Now all the tests pass.
+
+## Adding the new_with_session Method to the User Model
+```
   def self.new_with_session(params, session)
     super.tap do |user|
       if data = session['devise.facebook_data'] && session['devise.facebook_data']['extra']['raw_info']
@@ -279,13 +305,6 @@ Add the following line just before the last "end" line in config/initializers/de
 rails generate migration AddOmniauthToUsers provider:string uid:string
 ```
 * Enter the command "rails db:migrate".
-
-
-## config/environments/test.rb
-Edit the file config/environments/test.rb and add the following line just before the final "end" statement:
-```
-  OmniAuth.config.test_mode = true
-```
 
 ## .rubocop.yml
 * Add app/controllers/users/omniauth_callbacks_controller.rb to the list of files exempt from Metrics/LineLength.
