@@ -311,4 +311,4 @@ git push origin omniauth_login_test
 git checkout master
 git pull
 ```
-* Enter the command "sh heroku.sh".  In your production site, you won't be able to login from Facebook or Google just yet.  You have not yet entered the proper credentials in Heroku.
+* Enter the command "sh heroku.sh".  In your production site, you won't be able to login from Facebook, GitHub, Google, or Twitter just yet.
