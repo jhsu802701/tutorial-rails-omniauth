@@ -8,8 +8,7 @@ At this point, trying to log in through the browser on your local version of the
 ### Facebook
 * Go to the [Facebook for Developers page](https://developers.facebook.com/).
 * Create a new app.  Fill in the name of your app with the same name you've been using in GitHub and Heroku.
-* Go to the Dashboard to see the App ID and App Secret.
-* For easier reference, save your App ID and App Secret in KeePassX (or your preferred password manager).
+* Go to the Dashboard to see the App ID and App Secret.  For easier reference, save your App ID and App Secret in KeePassX (or your preferred password manager).
 * From your app's Dashboard, click on "Add Product".  Select "Facebook Login" and press "Set Up".  Select "Web".
 * Click on "Settings".
 * Add the following URLs under Valid OAuth redirect URIs:
@@ -29,6 +28,10 @@ http://localhost:3010/users/auth/facebook/callback
 * Click on "Save Changes" to save your settings.
 
 ### GitHub
+* From your browser, log into your GitHub account.  Go to the upper right corner of the page and click on the menu button.  Select "Settings".
+* On the left side of your settings page, go down to the "Developer Settings" section and click on "OAuth Apps".
+* Click on "Register a New Application".  Fill in the name of your app with the same name you've been using in GitHub and Heroku.  Fill in the URL of your app on Heroku for the Homepage URL.  For the callback URL, use "http://localhost:3000/users/auth/github/callback".  (NOTE: If the host machine port that maps to port 3000 in Docker, then use that port instead of 3000 in this URL.)
+* Get the client ID and secret ID.  For easier reference, save these values in KeePassX (or your preferred password manager).
 
 ### Google
 
