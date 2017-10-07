@@ -145,7 +145,7 @@ gem list "^omniauth-twitter$"
 * In the user section of config/routes.rb, add "omniauth_callbacks: 'users/omniauth_callbacks'" to the list of controllers under devise.
 * Enter the command "test1".  Now the tests won't even run simply because ":omniauthable" is not specified in the user model.
 
-## User Model
+## Adding the OmniAuth Attribute to the User Model
 * In the list of devise modules in app/models/user.rb, add the following attributes:
 ```
 :omniauthable, omniauth_providers: [:facebook, :github, :google_oauth2, :twitter]
@@ -153,8 +153,7 @@ gem list "^omniauth-twitter$"
 * Enter the command "test1".  The tests fail because the expected confirmations of successful logins do not occur.
 * Go to the tmux window where you are running the local server and restart the server by pressing Ctrl-c and then entering the command "sh server.sh".
 * In your browser, go to the home page of your app and then try to sign in with any of the OmniAuth services.  In your browser, you will get the message "Not found. Authentication passthru."  
-* You'll see that your local server shows a 404 (not found) error.
-* Open the file log/test.log, which you will rely on heavily for troubleshooting during the rest of this chapter.  You'll see a more detailed view of what happens during the tests than what the standard screen output shows.  At this point, clicking on any of the links to login with the OmniAuth services leads to a 404 (not found) error.
+* Open the file log/test.log for a more detailed view of what happens during the tests.  At this point, clicking on any of the links to login with the OmniAuth services leads to a 404 (not found) error.
 * The error messages in each of the 4 failed tests is:
 ```
 Completed 404 Not Found
@@ -165,14 +164,14 @@ Processing by Users::OmniauthCallbacksController#passthru as HTML
   Rendering text template
   Rendered text template
 ```
-* The last action prior to the processing by the user OmniAuth callback controller is one of the following:
-  * Started GET "/users/auth/facebook"
-  * Started GET "/users/auth/github"
-  * Started GET "/users/auth/google_oauth2"
-  * Started GET "/users/auth/twitter"
+* The last actions prior to the processing by the user OmniAuth callback controller are the following:
+  * For the Facebook test: Started GET "/users/auth/facebook"
+  * For the GitHub test: Started GET "/users/auth/github"
+  * For the Google test: Started GET "/users/auth/google_oauth2"
+  * For the Twitter test: Started GET "/users/auth/twitter"
 
 ## config/initializers/devise.rb
-* Add the following line just before the last "end" line in config/initializers/devise.rb:
+* Add the following lines just before the last "end" line in config/initializers/devise.rb:
 ```
   config.omniauth :facebook, ENV['FACEBOOK_ID'], ENV['FACEBOOK_SECRET'], callback_url: 'http://localhost:3000/users/auth/facebook/callback'
   config.omniauth :github, ENV['GITHUB_ID'], ENV['GITHUB_SECRET'], callback_url: 'http://localhost:3000/users/auth/github/callback'
@@ -192,7 +191,7 @@ Processing by Users::OmniauthCallbacksController#passthru as HTML
 ```
   OmniAuth.config.test_mode = true
 ```
-* This change bails you out of the need to provide the parameters in the test environment.
+* This change bails you out of the need to provide the parameters in the test environment.  Please note that this does NOT do anything for the development or production environments.
 * Enter the command "test1".  Now the tests fail because the facebook, github, google_oauth2, and twitter actions are missing in the user OmniAuth callbacks controller.
 
 ## app/controllers/users/omniauth_callbacks_controller.rb
@@ -280,24 +279,6 @@ Processing by Users::OmniauthCallbacksController#passthru as HTML
 * Enter the command "rails db:migrate".
 * Enter the command "test1".  Now all the tests pass.
 
-## Adding the new_with_session Method to the User Model
-```
-  def self.new_with_session(params, session)
-    super.tap do |user|
-      if data = session['devise.facebook_data'] && session['devise.facebook_data']['extra']['raw_info']
-        user.email = data['email'] if user.email?
-      elsif data = session['devise.github_data'] && session['devise.github_data']['extra']['raw_info']
-        user.email = data['email'] if user.email?
-      elsif data = session['devise.google_data'] && session['devise.google_data']['extra']['raw_info']
-        user.email = data['email'] if user.email?
-      elsif data = session['devise.twitter_data'] && session['devise.twitter_data']['extra']['raw_info']
-        user.email = data['email'] if user.email?
-      end
-    end
-  end
-```
-* Please note that each user MUST have an email address, password, last name, first name, and username.  In addition, a user must be confirmed in order to log in.  Therefore, the self.from_omniauth definition provides these parameters for those who wish to login to the app.
-
 ## User Parameters
 * Add the provider and uid parameters to the user model by entering the following command:
 ```
@@ -318,14 +299,6 @@ Metrics/AbcSize:
 Metrics/MethodLength:
   Exclude:
     - app/models/user.rb
-
-Metrics/CyclomaticComplexity:
-  Exclude:
-    - app/models/user.rb
-
-Metrics/PerceivedComplexity:
-  Exclude:
-    - app/models/user.rb
 ```
 * Enter the command "sh git_check.sh".  All tests should pass, and there should be no offenses.
 
@@ -333,7 +306,7 @@ Metrics/PerceivedComplexity:
 * Enter the following commands:
 ```
 git add .
-git commit -m "Added omniauth authentication"
+git commit -m "Added omniauth authentication (testing)"
 git push origin omniauth_login_test
 ```
 * Go to the GitHub repository and click on the "Compare and pull request" button for this branch.
@@ -345,15 +318,3 @@ git checkout master
 git pull
 ```
 * Enter the command "sh heroku.sh".  In your production site, you won't be able to login from Facebook or Google just yet.  You have not yet entered the proper credentials in Heroku.
-
-
-
-
-
-
-
-* In your browser, log into Heroku.  Go to your app, go to the settings tab, and click on "Reveal Config Vars".  Add the environment variables listed in your .env file, and give them the appropriate values.
-* In the terminal, enter the command "heroku restart" and then wait a moment.
-* You now should be able to log into your site with Google OmniAuth in Heroku.  However, you won't be able to log into your site with Facebook in Heroku.
-* Go back to the [Facebook for Developers page](https://developers.facebook.com/).  Go to your app, and click on "Facebook Login".  In the settings, go to the list of Valid OAuth redirect URIs, and remove all of the localhost URLs.  (Keep ONLY the production environment URL.)  Save your changes.
-
