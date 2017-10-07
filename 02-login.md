@@ -154,7 +154,22 @@ gem list "^omniauth-twitter$"
 * Enter the command "test1".  The tests fail because the expected confirmations of successful logins do not occur.  You will need to take several additional actions in order to address this, but the screen output you see when you enter the command "test1" will have no troubleshooting value for the rest of this chapter.
 * Go to the tmux window where you are running the local server and restart the server by pressing Ctrl-c and then entering the command "sh server.sh".
 * In your browser, go to the home page of your app and then try to sign in with any of the OmniAuth services.  In your browser, you will get the message "Not found. Authentication passthru."  You'll see that your local server shows a 404 (not found) error.  At this point, you will no longer see any useful information in your browser for the rest of this chapter.
-* Open the file log/test.log, which you will rely on for troubleshooting during the rest of this chapter.  You'll see a more detailed view of what happens during the tests than what the standard screen output shows.  At this point, attempting to log in through any of the OmniAuth services leads to a 404 (not found) error.
+* Open the file log/test.log, which you will rely on for troubleshooting during the rest of this chapter.  You'll see a more detailed view of what happens during the tests than what the standard screen output shows.  At this point, clicking on any of the links to login with the OmniAuth services leads to a 404 (not found) error.
+* The error messages in each of the 4 failed tests is:
+```
+Completed 404 Not Found
+```
+* The preceding action is:
+```
+Processing by Users::OmniauthCallbacksController#passthru as HTML
+  Rendering text template
+  Rendered text template
+```
+* The last action prior to the processing by the user OmniAuth callback controller is one of the following:
+  * Started GET "/users/auth/facebook"
+  * Started GET "/users/auth/github"
+  * Started GET "/users/auth/google_oauth2"
+  * Started GET "/users/auth/twitter"
 
 ## config/initializers/devise.rb
 Add the following line just before the last "end" line in config/initializers/devise.rb:
@@ -165,50 +180,6 @@ Add the following line just before the last "end" line in config/initializers/de
   config.omniauth :twitter, ENV['TWITTER_ID'], ENV['TWITTER_SECRET'], callback_url: 'http://localhost:3000/users/auth/twitter/callback'
 ```
 
-## Other User Model Updates
-* Just before the end of the public section of app/models/user.rb, add the following lines:
-```
-  def self.from_omniauth(auth)
-    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
-      t_sec = Time.now.to_f
-      t_usec = (t_sec * 1_000_000).to_i
-      user.username = "user_omni_#{t_usec}"
-      user.email = auth.info.email
-      user.password = Devise.friendly_token[0, 20]
-      user.confirmed_at = Time.now
-      name_auth = auth.info.name
-      name_auth_array = name_auth.gsub(/\s+/m, ' ').strip.split(' ')
-      user.last_name = name_auth_array.last
-      user.first_name = name_auth_array.first
-      if auth.provider == 'google'
-        user.last_name = auth.info.last_name
-        user.first_name = auth.info.first_name
-      end
-    end
-  end
-
-  def self.new_with_session(params, session)
-    super.tap do |user|
-      if data = session['devise.facebook_data'] && session['devise.facebook_data']['extra']['raw_info']
-        user.email = data['email'] if user.email?
-      elsif data = session['devise.github_data'] && session['devise.github_data']['extra']['raw_info']
-        user.email = data['email'] if user.email?
-      elsif data = session['devise.google_data'] && session['devise.google_data']['extra']['raw_info']
-        user.email = data['email'] if user.email?
-      elsif data = session['devise.twitter_data'] && session['devise.twitter_data']['extra']['raw_info']
-        user.email = data['email'] if user.email?
-      end
-    end
-  end
-```
-* Please note that each user MUST have an email address, password, last name, first name, and username.  In addition, a user must be confirmed in order to log in.  Therefore, the self.from_omniauth definition provides these parameters for those who wish to login to the app.
-
-## User Parameters
-* Add the provider and uid parameters to the user model by entering the following command:
-```
-rails generate migration AddOmniauthToUsers provider:string uid:string
-```
-* Enter the command "rails db:migrate".
 
 ## app/controllers/users/omniauth_callbacks_controller.rb
 * In the file app/controllers/users/omniauth_callbacks_controller.rb, add the following lines just before the last "end" statement:
@@ -263,6 +234,52 @@ rails generate migration AddOmniauthToUsers provider:string uid:string
 ```
 * Enter the command "test1".  Now your tests should pass, but you're not finished yet.
 * Restart the local Rails server and view your app.  When you try to log in through Facebook, you'll get the error message "The parameter app_id is required."  When you try to log in through Google, you'll get an error message saying that you made an invalid request.  Your app needs to the right credentials in order to log in with Facebook or Google.
+
+## Other User Model Updates
+* Just before the end of the public section of app/models/user.rb, add the following lines:
+```
+  def self.from_omniauth(auth)
+    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+      t_sec = Time.now.to_f
+      t_usec = (t_sec * 1_000_000).to_i
+      user.username = "user_omni_#{t_usec}"
+      user.email = auth.info.email
+      user.password = Devise.friendly_token[0, 20]
+      user.confirmed_at = Time.now
+      name_auth = auth.info.name
+      name_auth_array = name_auth.gsub(/\s+/m, ' ').strip.split(' ')
+      user.last_name = name_auth_array.last
+      user.first_name = name_auth_array.first
+      if auth.provider == 'google'
+        user.last_name = auth.info.last_name
+        user.first_name = auth.info.first_name
+      end
+    end
+  end
+
+  def self.new_with_session(params, session)
+    super.tap do |user|
+      if data = session['devise.facebook_data'] && session['devise.facebook_data']['extra']['raw_info']
+        user.email = data['email'] if user.email?
+      elsif data = session['devise.github_data'] && session['devise.github_data']['extra']['raw_info']
+        user.email = data['email'] if user.email?
+      elsif data = session['devise.google_data'] && session['devise.google_data']['extra']['raw_info']
+        user.email = data['email'] if user.email?
+      elsif data = session['devise.twitter_data'] && session['devise.twitter_data']['extra']['raw_info']
+        user.email = data['email'] if user.email?
+      end
+    end
+  end
+```
+* Please note that each user MUST have an email address, password, last name, first name, and username.  In addition, a user must be confirmed in order to log in.  Therefore, the self.from_omniauth definition provides these parameters for those who wish to login to the app.
+
+## User Parameters
+* Add the provider and uid parameters to the user model by entering the following command:
+```
+rails generate migration AddOmniauthToUsers provider:string uid:string
+```
+* Enter the command "rails db:migrate".
+
 
 ## config/environments/test.rb
 Edit the file config/environments/test.rb and add the following line just before the final "end" statement:
