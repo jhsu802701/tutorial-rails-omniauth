@@ -44,7 +44,7 @@ gem 'dotenv-rails' # Needed to export ID and secret values into environment vari
 * Enter the command "bundle install".
 
 ## config_env.sh
-* Create the file config_env.sh and give it the following content:
+Create the file config_env.sh and give it the following content:
 ```
 #!/bin/bash
 
@@ -81,11 +81,7 @@ sed -i.bak "s|INSERT_GOOGLE_APP_ID|$GOOGLE_ID|g" .env
 sed -i.bak "s|INSERT_GOOGLE_APP_SECRET|$GOOGLE_SECRET|g" .env
 sed -i.bak "s|INSERT_TWITTER_APP_ID|$TWITTER_ID|g" .env
 sed -i.bak "s|INSERT_TWITTER_APP_SECRET|$TWITTER_SECRET|g" .env
-
 ```
-* Enter the command "sh config_env.sh".  Enter your app's credentials when requested.
-* Restart the local Rails server.
-* You should still be able to login to your local app through Facebook and through Google.
 
 ## Wrapping Up
 * Enter the following commands:
