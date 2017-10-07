@@ -173,10 +173,10 @@ Processing by Users::OmniauthCallbacksController#passthru as HTML
 ## config/initializers/devise.rb
 * Add the following lines just before the last "end" line in config/initializers/devise.rb:
 ```
-  config.omniauth :facebook, ENV['FACEBOOK_ID'], ENV['FACEBOOK_SECRET'], callback_url: 'facebook/callback'
-  config.omniauth :github, ENV['GITHUB_ID'], ENV['GITHUB_SECRET'], callback_url: 'users/auth/github/callback'
-  config.omniauth :google_oauth2, ENV['GOOGLE_ID'], ENV['GOOGLE_SECRET'], callback_url: 'users/auth/google/callback'
-  config.omniauth :twitter, ENV['TWITTER_ID'], ENV['TWITTER_SECRET'], callback_url: 'users/auth/twitter/callback'
+  config.omniauth :facebook, ENV['FACEBOOK_APP_ID'], ENV['FACEBOOK_APP_SECRET'], callback_url: 'facebook/callback'
+  config.omniauth :github, ENV['GITHUB_APP_ID'], ENV['GITHUB_APP_SECRET'], callback_url: 'users/auth/github/callback'
+  config.omniauth :google_oauth2, ENV['GOOGLE_APP_ID'], ENV['GOOGLE_APP_SECRET'], callback_url: 'users/auth/google/callback'
+  config.omniauth :twitter, ENV['TWITTER_APP_ID'], ENV['TWITTER_APP_SECRET'], callback_url: 'users/auth/twitter/callback'
 ```
 * Enter the command "test1".  In the screen output, you'll see that the Facebook test fails because no route matches "/v2.6/dialog/oauth", the GitHub test fails because no route matches "/login/oauth/authorize", the Google test fails because no route matches "/o/oauth2/auth" for the Google test, and the Twitter test fails with a code 400 (bad request).
 * Restart the local server, and then go to your local version of the app.
