@@ -34,8 +34,47 @@ http://localhost:3010/users/auth/facebook/callback
 * Get the client ID and secret ID.  For easier reference, save these values in KeePassX (or your preferred password manager).
 
 ### Google
+* Go to the [Google Developers Console](https://console.developers.google.com).
+* Click on "Create Credentials", and select "OAuth client ID".  Select "Web application".  Fill in the name of your app with the same name you've been using in GitHub and Heroku.
+* In the list of URLs under "Authorized JavaScript origins", add the following URLs:
+```
+http://localhost:3000
+http://localhost:3001
+http://localhost:3002
+http://localhost:3003
+http://localhost:3004
+http://localhost:3005
+http://localhost:3006
+http://localhost:3007
+http://localhost:3008
+http://localhost:3009
+http://localhost:3010
+```
+* In the list of URLs under "Authorized redirect URIs", add the following URLs:
+```
+http://localhost:3000/users/auth/google_oauth2
+http://localhost:3001/users/auth/google_oauth2
+http://localhost:3002/users/auth/google_oauth2
+http://localhost:3003/users/auth/google_oauth2
+http://localhost:3004/users/auth/google_oauth2
+http://localhost:3005/users/auth/google_oauth2
+http://localhost:3006/users/auth/google_oauth2
+http://localhost:3007/users/auth/google_oauth2
+http://localhost:3008/users/auth/google_oauth2
+http://localhost:3009/users/auth/google_oauth2
+http://localhost:3010/users/auth/google_oauth2
+```
+* Press the "Create" button.
+* Get the client ID and client secret.  For easier reference, save these values in KeePassX (or your preferred password manager).
 
 ### Twitter
+* Go to the [Twitter Application Page](https://apps.twitter.com/).
+* Press "Create New App".
+* Fill in the name and description with the same name you've been using in GitHub and Heroku.  Fill in the URL of your app on Heroku for the Website URL.  Use http://localhost:3000/users/auth/twitter/callback for the Callback URL.
+* Read the Twitter Development Agreement, and toggle on the box to acknowledge that you read and agree to it.
+* Press "Create your Twitter application".
+* Click on "Keys and Access Tokens".  Get the Consumer Key (API Key) and 	Consumer Secret (API Secret).  For easier reference, save these values in KeePassX (or your preferred password manager).
+
 
 ## New Branch
 Enter the command "git checkout -b omniauth_login_dev".
