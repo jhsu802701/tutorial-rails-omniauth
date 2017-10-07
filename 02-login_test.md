@@ -277,7 +277,8 @@ Processing by Users::OmniauthCallbacksController#passthru as HTML
 * Enter the command "test1".  Now the tests fail because the uid parameter is missing from the user model.
 * Enter the command "rails generate migration AddUIDToUsers uid:string"
 * Enter the command "rails db:migrate".
-* Enter the command "test1".  Now all the tests pass.
+* Enter the command "test1".  Now all the integration tests in this chapter should pass.
+* Enter the command "sh git_check.sh".  All of the tests should pass, but there will be RuboCop offenses.
 
 ## .rubocop.yml
 * Add app/controllers/users/omniauth_callbacks_controller.rb to the list of files exempt from Metrics/LineLength.
