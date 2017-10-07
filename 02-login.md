@@ -147,7 +147,7 @@ gem list "^omniauth-twitter$"
 * Enter the command "test1".  Now the tests won't even run simply because ":omniauthable" is not specified in the user model.
 
 ## Making the User Model Omniauthable
-* In the list of devise modules in app/models/user.rb, add the following attributes to the list of devise modules:
+* In the list of devise modules in app/models/user.rb, add the following attributes:
 ```
 :omniauthable, omniauth_providers: [:facebook, :github, :google_oauth2, :twitter]
 ```
