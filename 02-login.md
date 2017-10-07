@@ -3,7 +3,7 @@
 In this chapter, you will provide OmniAuth login capabilities in the test environment.  The OmniAuth logins will NOT work in the development or production environments yet.  (You will provide this capability in later chapters.)
 
 ## New Branch
-Enter the command "git checkout -b omniauth_login_tests".
+Enter the command "git checkout -b omniauth_login_test".
 
 ## Integration Tests
 * Enter the command "rails generate integration_test omniauth_login".
@@ -334,7 +334,7 @@ Metrics/PerceivedComplexity:
 ```
 git add .
 git commit -m "Added omniauth authentication"
-git push origin omniauth_login_tests
+git push origin omniauth_login_test
 ```
 * Go to the GitHub repository and click on the "Compare and pull request" button for this branch.
 * Code Climate will flag this branch because of the similarities between the facebook and google_oauth2 definitions in  app/controllers/users/omniauth_callbacks_controller.rb.  Mark this issue as "Wontfix".
@@ -345,6 +345,13 @@ git checkout master
 git pull
 ```
 * Enter the command "sh heroku.sh".  In your production site, you won't be able to login from Facebook or Google just yet.  You have not yet entered the proper credentials in Heroku.
+
+
+
+
+
+
+
 * In your browser, log into Heroku.  Go to your app, go to the settings tab, and click on "Reveal Config Vars".  Add the environment variables listed in your .env file, and give them the appropriate values.
 * In the terminal, enter the command "heroku restart" and then wait a moment.
 * You now should be able to log into your site with Google OmniAuth in Heroku.  However, you won't be able to log into your site with Facebook in Heroku.
