@@ -146,7 +146,7 @@ gem list "^omniauth-twitter$"
 * In the user section of config/routes.rb, add "omniauth_callbacks: 'users/omniauth_callbacks'" to the list of controllers under devise.
 * Enter the command "test1".  Now the tests won't even run simply because ":omniauthable" is not specified in the user model.
 
-## User Model
+## Making the User Model Omniauthable
 * In the list of devise modules in app/models/user.rb, add the following attributes to the list of devise modules:
 ```
 :omniauthable, omniauth_providers: [:facebook, :github, :google_oauth2, :twitter]
@@ -155,6 +155,17 @@ gem list "^omniauth-twitter$"
 * Go to the tmux window where you are running the local server and restart the server by pressing Ctrl-c and then entering the command "sh server.sh".
 * In your browser, go to the home page of your app and then try to sign in with any of the OmniAuth services.  In your browser, you will get the message "Not found. Authentication passthru."  You'll see that your local server shows a 404 (not found) error.  At this point, you will no longer see any useful information in your browser for the rest of this chapter.
 * Open the file log/test.log, which you will rely on for troubleshooting during the rest of this chapter.  You'll see a more detailed view of what happens during the tests than what the standard screen output shows.  At this point, attempting to log in through any of the OmniAuth services leads to a 404 (not found) error.
+
+## config/initializers/devise.rb
+Add the following line just before the last "end" line in config/initializers/devise.rb:
+```
+  config.omniauth :facebook, ENV['FACEBOOK_ID'], ENV['FACEBOOK_SECRET'], callback_url: 'http://localhost:3000/users/auth/facebook/callback'
+  config.omniauth :github, ENV['GITHUB_ID'], ENV['GITHUB_SECRET'], callback_url: 'http://localhost:3000/users/auth/github/callback'
+  config.omniauth :google_oauth2, ENV['GOOGLE_ID'], ENV['GOOGLE_SECRET'], callback_url: 'http://localhost:3000/users/auth/google/callback'
+  config.omniauth :twitter, ENV['TWITTER_ID'], ENV['TWITTER_SECRET'], callback_url: 'http://localhost:3000/users/auth/twitter/callback'
+```
+
+## Other User Model Updates
 * Just before the end of the public section of app/models/user.rb, add the following lines:
 ```
   def self.from_omniauth(auth)
@@ -191,15 +202,6 @@ gem list "^omniauth-twitter$"
   end
 ```
 * Please note that each user MUST have an email address, password, last name, first name, and username.  In addition, a user must be confirmed in order to log in.  Therefore, the self.from_omniauth definition provides these parameters for those who wish to login to the app.
-
-## config/initializers/devise.rb
-Add the following line just before the last "end" line in config/initializers/devise.rb:
-```
-  config.omniauth :facebook, ENV['FACEBOOK_ID'], ENV['FACEBOOK_SECRET'], callback_url: 'http://localhost:3000/users/auth/facebook/callback'
-  config.omniauth :github, ENV['GITHUB_ID'], ENV['GITHUB_SECRET'], callback_url: 'http://localhost:3000/users/auth/github/callback'
-  config.omniauth :google_oauth2, ENV['GOOGLE_ID'], ENV['GOOGLE_SECRET'], callback_url: 'http://localhost:3000/users/auth/google/callback'
-  config.omniauth :twitter, ENV['TWITTER_ID'], ENV['TWITTER_SECRET'], callback_url: 'http://localhost:3000/users/auth/twitter/callback'
-```
 
 ## User Parameters
 * Add the provider and uid parameters to the user model by entering the following command:
