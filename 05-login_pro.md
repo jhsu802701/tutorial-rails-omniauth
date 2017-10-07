@@ -62,3 +62,20 @@ http://localhost:3010/users/auth/google_oauth2/callback
 * You will now see your client ID and client secret.
 * For easier reference, save your App ID and App Secret in KeePassX (or your preferred password manager).
 * From your app's dashboard, click on "Enable APIs and Services".  Enable the Contacts API and Google+ API.
+
+
+## User Model
+* In the user model, add the following lines just before the end of the public section:
+```
+  def self.new_with_session(params, session)
+    super.tap do |user|
+      if data = session['devise.facebook_data'] && session['devise.facebook_data']['extra']['raw_info']
+        user.email = data['email'] if user.email?
+      elsif data = session['devise.github_data'] && session['devise.github_data']['extra']['raw_info']
+        user.email = data['email'] if user.email?
+      elsif data = session['devise.google_data'] && session['devise.google_data']['extra']['raw_info']
+        user.email = data['email'] if user.email?
+      end
+    end
+  end
+```
