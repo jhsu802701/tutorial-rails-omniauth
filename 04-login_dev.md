@@ -26,6 +26,7 @@ http://localhost:3008/users/auth/facebook/callback
 http://localhost:3009/users/auth/facebook/callback
 http://localhost:3010/users/auth/facebook/callback
 ```
+* Click on "Save Changes" to save your settings.
 
 ### GitHub
 
