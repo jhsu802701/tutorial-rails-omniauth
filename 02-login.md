@@ -32,7 +32,6 @@ Enter the command "git checkout -b omniauth_login_tests".
 
   def login_and_logout_twitter
     click_on 'Sign in with Twitter'
-    puts page.body
     assert page.has_text?('Successfully authenticated from Twitter account.')
     click_on 'Logout'
     assert page.has_text?('Signed out successfully.')
