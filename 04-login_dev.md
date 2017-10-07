@@ -2,6 +2,37 @@
 
 In this chapter, you will provide OmniAuth login capabilities in the development environment.  The OmniAuth logins will NOT work in the production environment yet.  (You will provide this capability later.)
 
+## Credentials
+At this point, trying to log in through the browser on your local version of the app gives you errors even though the tests pass.  You need to create your app on each of the OmniAuth services you wish to provide, get the right credentials, and then provide them in environment variables.
+
+### Facebook
+* Go to the [Facebook for Developers page](https://developers.facebook.com/).
+* Create a new app.  Fill in the name of your app with the same name you've been using in GitHub and Heroku.
+* Go to the Dashboard to see the App ID and App Secret.
+* For easier reference, save your App ID and App Secret in KeePassX (or your preferred password manager).
+* From your app's Dashboard, click on "Add Product".  Select "Facebook Login" and press "Set Up".  Select "Web".
+* Click on "Settings".
+* Add the following URLs under Valid OAuth redirect URIs:
+```
+http://localhost:3000/users/auth/facebook/callback
+http://localhost:3001/users/auth/facebook/callback
+http://localhost:3002/users/auth/facebook/callback
+http://localhost:3003/users/auth/facebook/callback
+http://localhost:3004/users/auth/facebook/callback
+http://localhost:3005/users/auth/facebook/callback
+http://localhost:3006/users/auth/facebook/callback
+http://localhost:3007/users/auth/facebook/callback
+http://localhost:3008/users/auth/facebook/callback
+http://localhost:3009/users/auth/facebook/callback
+http://localhost:3010/users/auth/facebook/callback
+```
+
+### GitHub
+
+### Google
+
+### Twitter
+
 ## New Branch
 Enter the command "git checkout -b omniauth_login_dev".
 
