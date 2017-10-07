@@ -84,6 +84,7 @@ sed -i.bak "s|INSERT_TWITTER_APP_SECRET|$TWITTER_SECRET|g" .env
 ```
 
 ## Wrapping Up
+* Enter the command "sh git_check.sh".  All tests should pass, and there should be no offenses.
 * Enter the following commands:
 ```
 git add .
