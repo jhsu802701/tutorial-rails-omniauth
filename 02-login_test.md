@@ -30,13 +30,6 @@ Enter the command "git checkout -b omniauth_login_test".
     assert page.has_text?('Signed out successfully.')
   end
 
-  def login_and_logout_twitter
-    click_on 'Sign in with Twitter'
-    assert page.has_text?('Successfully authenticated from Twitter account.')
-    click_on 'Logout'
-    assert page.has_text?('Signed out successfully.')
-  end
-
   test 'Can login with Facebook credentials' do
     OmniAuth.config.mock_auth[:facebook] = OmniAuth::AuthHash.new(
       provider: 'facebook', uid: '100001', confirmed_at: Time.now,
@@ -84,22 +77,6 @@ Enter the command "git checkout -b omniauth_login_test".
     click_on 'Login'
     login_and_logout_google
   end
-
-  test 'Can login with Twitter credentials' do
-    OmniAuth.config.mock_auth[:twitter] = OmniAuth::AuthHash.new(
-      provider: 'twitter', uid: '100004', confirmed_at: Time.now,
-      info: { last_name: 'Dorsey', first_name: 'Jack',
-              email: 'jdorsey@twitter.com' }
-    )
-    # From home page
-    visit root_path
-    login_and_logout_twitter
-
-    # From user login page
-    visit root_path
-    click_on 'Login'
-    login_and_logout_twitter
-  end
 ```
 * Enter the command "sh test_app.sh".  You'll see the "uninitialized constant OmniauthTest::OmniAuth" errors, a result of not having OmniAuth installed.
 * Enter the command "alias test1='command for running the tests that failed minus the TESTOPTS portion'".
@@ -113,7 +90,6 @@ Enter the command "git checkout -b omniauth_login_test".
 gem 'omniauth-facebook'
 gem 'omniauth-github'
 gem 'omniauth-google-oauth2'
-gem 'omniauth-twitter'
 # END: omniauth
 ```
 * Enter the command "bundle install".
@@ -122,7 +98,6 @@ gem 'omniauth-twitter'
 gem list "^omniauth-facebook$"
 gem list "^omniauth-github$"
 gem list "^omniauth-google-oauth2$"
-gem list "^omniauth-twitter$"
 ```
 * Pin the version numbers of the omniauth-related gems in your Gemfile.
 * Enter the command "bundle install; test1".  Now the test failures are due to missing hyperlinks.
@@ -136,8 +111,6 @@ gem list "^omniauth-twitter$"
       <%= link_to "Sign in with GitHub", user_github_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
       <br><br>
       <%= link_to "Sign in with Google", user_google_oauth2_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
-      <br><br>
-      <%= link_to "Sign in with Twitter", user_twitter_omniauth_authorize_path, class: "btn btn-sm btn-primary" %>
 ```
 * Enter the command "test1".  Now the test failures are due to undefined paths.
 
@@ -148,13 +121,13 @@ gem list "^omniauth-twitter$"
 ## Adding the OmniAuth Attribute to the User Model
 * In the list of devise modules in app/models/user.rb, add the following attributes:
 ```
-:omniauthable, omniauth_providers: [:facebook, :github, :google_oauth2, :twitter]
+:omniauthable, omniauth_providers: [:facebook, :github, :google_oauth2]
 ```
 * Enter the command "test1".  The tests fail because the expected confirmations of successful logins do not occur.
 * Go to the tmux window where you are running the local server and restart the server by pressing Ctrl-c and then entering the command "sh server.sh".
 * In your browser, go to the home page of your app and then try to sign in with any of the OmniAuth services.  In your browser, you will get the message "Not found. Authentication passthru."  
 * Open the file log/test.log for a more detailed view of what happens during the tests.  At this point, clicking on any of the links to login with the OmniAuth services leads to a 404 (not found) error.
-* The error messages in each of the 4 failed tests is:
+* The error messages in each of the failed tests is:
 ```
 Completed 404 Not Found
 ```
@@ -168,7 +141,6 @@ Processing by Users::OmniauthCallbacksController#passthru as HTML
   * For the Facebook test: Started GET "/users/auth/facebook"
   * For the GitHub test: Started GET "/users/auth/github"
   * For the Google test: Started GET "/users/auth/google_oauth2"
-  * For the Twitter test: Started GET "/users/auth/twitter"
 
 ## config/initializers/devise.rb
 * Add the following lines just before the last "end" line in config/initializers/devise.rb:
@@ -176,14 +148,12 @@ Processing by Users::OmniauthCallbacksController#passthru as HTML
   config.omniauth :facebook, ENV['FACEBOOK_APP_ID'], ENV['FACEBOOK_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/facebook/callback'
   config.omniauth :github, ENV['GITHUB_APP_ID'], ENV['GITHUB_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/github/callback'
   config.omniauth :google_oauth2, ENV['GOOGLE_APP_ID'], ENV['GOOGLE_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/google/callback'
-  config.omniauth :twitter, ENV['TWITTER_APP_ID'], ENV['TWITTER_APP_SECRET'], callback_url: 'http://localhost:3000/users/auth/twitter/callback'
 ```
 * Enter the command "test1".  In the screen output, you'll see that the Facebook test fails because no route matches "/v2.6/dialog/oauth", the GitHub test fails because no route matches "/login/oauth/authorize", the Google test fails because no route matches "/o/oauth2/auth" for the Google test, and the Twitter test fails with a code 400 (bad request).
 * Restart the local server, and then go to your local version of the app.
   * When you try to login with Facebook, you end up on a Facebook page with the error message "The parameter app_id is required".
   * When you try to login with GitHub, you end up on a GitHub page with the 404 (not found) error message.
   * When you try to login with Google, you end up on a Google page with a 400 error and messages telling you that you made an invalid request and are missing the client_id parameter.
-  * When you try to login with Twitter, you remain on your localhost with a 400 (bad request) error message.
 * In other words, you are missing the parameters required.  For the development and production environments, you'll provide the parameters later.  The next step is to address this issue in the test environment.
 
 ## config/environments/test.rb
@@ -226,17 +196,6 @@ Processing by Users::OmniauthCallbacksController#passthru as HTML
       set_flash_message(:notice, :success, kind: 'Google') if is_navigational_format?
     else
       session['devise.google_data'] = request.env['omniauth.auth']
-      redirect_to new_user_registration_url
-    end
-  end
-
-  def twitter
-    @user = User.from_omniauth(request.env['omniauth.auth'])
-    if @user.persisted?
-      sign_in_and_redirect @user, event: :authentication
-      set_flash_message(:notice, :success, kind: 'Twitter') if is_navigational_format?
-    else
-      session['devise.twitter_data'] = request.env['omniauth.auth']
       redirect_to new_user_registration_url
     end
   end
