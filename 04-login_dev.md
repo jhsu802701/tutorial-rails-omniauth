@@ -67,86 +67,10 @@ http://localhost:3010/users/auth/google_oauth2/callback
 * Press the "Create" button.
 * Get the client ID and client secret.  For easier reference, save these values in KeePassX (or your preferred password manager).
 
-### Twitter
-* Go to the [Twitter Application Page](https://apps.twitter.com/).
-* Press "Create New App".
-* Fill in the name and description with the same name you've been using in GitHub and Heroku.  Fill in the URL of your app on Heroku for the Website URL.  Use http://localhost:3000/users/auth/twitter/callback for the Callback URL.
-* Read the Twitter Development Agreement, and toggle on the box to acknowledge that you read and agree to it.
-* Press "Create your Twitter application".
-* Click on "Keys and Access Tokens".  Get the Consumer Key (API Key) and 	Consumer Secret (API Secret).  For easier reference, save these values in KeePassX (or your preferred password manager).
-
-## Development Environment Setup
-* In the user model, add the following lines just before the end of the public section:
-```
-  def self.new_with_session(params, session)
-    super.tap do |user|
-      if data = session['devise.facebook_data'] && session['devise.facebook_data']['extra']['raw_info']
-        user.email = data['email'] if user.email?
-      elsif data = session['devise.github_data'] && session['devise.github_data']['extra']['raw_info']
-        user.email = data['email'] if user.email?
-      elsif data = session['devise.google_data'] && session['devise.google_data']['extra']['raw_info']
-        user.email = data['email'] if user.email?
-      elsif data = session['devise.twitter_data'] && session['devise.twitter_data']['extra']['raw_info']
-        user.email = data['email'] if user.email?
-      end
-    end
-  end
-```
+## Configuring the Development Environment
 * In your command line terminal, enter the command "sh config_env.sh".  When prompted, enter the appropriate OmniAuth credential.
 * Restart the local Rails server.
+* You should now be able to log into the local version of your app with the OmniAuth services through your browser.
+* This still is not enough to log into your app with the OmniAuth services in Heroku.
 
 
-## New Branch
-Enter the command "git checkout -b omniauth_login_dev".
-
-## .rubocop.yml
-* Add app/controllers/users/omniauth_callbacks_controller.rb to the list of files exempt from Metrics/LineLength.
-* Add app/models/user.rb to the list of files exempt from Style/SymbolArray.
-* Add the following lines to the .rubocop.yml file:
-```
-
-Metrics/AbcSize:
-  Exclude:
-    - app/models/user.rb
-
-Metrics/MethodLength:
-  Exclude:
-    - app/models/user.rb
-
-Metrics/CyclomaticComplexity:
-  Exclude:
-    - app/models/user.rb
-
-Metrics/PerceivedComplexity:
-  Exclude:
-    - app/models/user.rb
-```
-* Enter the command "sh git_check.sh".  All tests should pass, and there should be no offenses.
-
-## Wrapping Up
-* Enter the following commands:
-```
-git add .
-git commit -m "Added omniauth logins (test)"
-git push origin omniauth_login_dev
-```
-* Go to the GitHub repository and click on the "Compare and pull request" button for this branch.
-* Code Climate will flag this branch because of the similarities between the facebook and google_oauth2 definitions in  app/controllers/users/omniauth_callbacks_controller.rb.  Mark this issue as "Wontfix".
-* When you see that your app passes in contiuous integration, accept this pull request to merge it with the master branch.
-* Enter the following commands:
-```
-git checkout master
-git pull
-```
-* Enter the command "sh heroku.sh".  In your production site, you won't be able to login from Facebook or Google just yet.  You have not yet entered the proper credentials in Heroku.
-
-
-
-
-
-
-
-* In your browser, log into Heroku.  Go to your app, go to the settings tab, and click on "Reveal Config Vars".  Add the environment variables listed in your .env file, and give them the appropriate values.
-* In the terminal, enter the command "heroku restart" and then wait a moment.
-* You now should be able to log into your site with Google OmniAuth in Heroku.  However, you won't be able to log into your site with Facebook in Heroku.
-* Go back to the [Facebook for Developers page](https://developers.facebook.com/).  Go to your app, and click on "Facebook Login".  In the settings, go to the list of Valid OAuth redirect URIs, and remove all of the localhost URLs.  (Keep ONLY the production environment URL.)  Save your changes.
