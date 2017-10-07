@@ -151,10 +151,11 @@ gem list "^omniauth-twitter$"
 ```
 :omniauthable, omniauth_providers: [:facebook, :github, :google_oauth2, :twitter]
 ```
-* Enter the command "test1".  The tests fail because the expected confirmations of successful logins do not occur.  You will need to take several additional actions in order to address this.
+* Enter the command "test1".  The tests fail because the expected confirmations of successful logins do not occur.  You will need to take several additional actions in order to address this, but the screen output you see when you enter the command "test1" will have no troubleshooting value for the rest of this chapter.
 * Go to the tmux window where you are running the local server and restart the server by pressing Ctrl-c and then entering the command "sh server.sh".
 * In your browser, go to the home page of your app and then try to sign in with any of the OmniAuth services.  In your browser, you will get the message "Not found. Authentication passthru."  You'll see that your local server shows a 404 (not found) error.  At this point, you will no longer see any useful information in your browser for the rest of this chapter.
-* Just before the end of the public section, add the following lines:
+* Open the file log/test.log, which you will rely on for troubleshooting during the rest of this chapter.  You'll see a more detailed view of what happens during the tests than what the standard screen output shows.  At this point, attempting to log in through any of the OmniAuth services leads to a 404 (not found) error.
+* Just before the end of the public section of app/models/user.rb, add the following lines:
 ```
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
@@ -191,13 +192,6 @@ gem list "^omniauth-twitter$"
 ```
 * Please note that each user MUST have an email address, password, last name, first name, and username.  In addition, a user must be confirmed in order to log in.  Therefore, the self.from_omniauth definition provides these parameters for those who wish to login to the app.
 
-## User Parameters
-* Add the provider and uid parameters to the user model by entering the following command:
-```
-rails generate migration AddOmniauthToUsers provider:string uid:string
-```
-* Enter the command "rails db:migrate".
-
 ## config/initializers/devise.rb
 Add the following line just before the last "end" line in config/initializers/devise.rb:
 ```
@@ -206,6 +200,13 @@ Add the following line just before the last "end" line in config/initializers/de
   config.omniauth :google_oauth2, ENV['GOOGLE_ID'], ENV['GOOGLE_SECRET'], callback_url: 'http://localhost:3000/users/auth/google/callback'
   config.omniauth :twitter, ENV['TWITTER_ID'], ENV['TWITTER_SECRET'], callback_url: 'http://localhost:3000/users/auth/twitter/callback'
 ```
+
+## User Parameters
+* Add the provider and uid parameters to the user model by entering the following command:
+```
+rails generate migration AddOmniauthToUsers provider:string uid:string
+```
+* Enter the command "rails db:migrate".
 
 ## app/controllers/users/omniauth_callbacks_controller.rb
 * In the file app/controllers/users/omniauth_callbacks_controller.rb, add the following lines just before the last "end" statement:
