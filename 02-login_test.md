@@ -304,7 +304,7 @@ git commit -m "Added omniauth authentication (testing)"
 git push origin omniauth_login_test
 ```
 * Go to the GitHub repository and click on the "Compare and pull request" button for this branch.
-* Code Climate will flag this branch because of the similarities in the facebook, github, google_oauth2, and twitter definitions in app/controllers/users/omniauth_callbacks_controller.rb.  Mark this issue as "Wontfix".
+* Code Climate will flag this branch because of the similarities in the facebook, github, google_oauth2, and twitter definitions in app/controllers/users/omniauth_callbacks_controller.rb.  Mark this issue as "Wontfix", and press "Approve".
 * When you see that your app passes in contiuous integration, accept this pull request to merge it with the master branch.
 * Enter the following commands:
 ```
