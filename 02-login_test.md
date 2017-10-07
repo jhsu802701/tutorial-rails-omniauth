@@ -191,7 +191,7 @@ Processing by Users::OmniauthCallbacksController#passthru as HTML
 ```
   OmniAuth.config.test_mode = true
 ```
-* This change bails you out of the need to provide the parameters in the test environment.  Please note that this does NOT do anything for the development or production environments.
+* This change bails you out of the need to provide the parameters in the test environment.  Please note that this does NOT do bail you out of the need to do so in the development or production environments.
 * Enter the command "test1".  Now the tests fail because the facebook, github, google_oauth2, and twitter actions are missing in the user OmniAuth callbacks controller.
 
 ## app/controllers/users/omniauth_callbacks_controller.rb
