@@ -1,4 +1,4 @@
-# Chapter 2: OmniAuth Login Tests
+# Chapter 2: OmniAuth Login (Test Environment)
 
 In this chapter, you will provide OmniAuth login capabilities in the test environment.  The OmniAuth logins will NOT work in the development or production environments yet.  (You will provide this capability in later chapters.)
 
@@ -145,7 +145,7 @@ gem list "^omniauth-twitter$"
 * In the user section of config/routes.rb, add "omniauth_callbacks: 'users/omniauth_callbacks'" to the list of controllers under devise.
 * Enter the command "test1".  Now the tests won't even run simply because ":omniauthable" is not specified in the user model.
 
-## Making the User Model Omniauthable
+## User Model
 * In the list of devise modules in app/models/user.rb, add the following attributes:
 ```
 :omniauthable, omniauth_providers: [:facebook, :github, :google_oauth2, :twitter]
