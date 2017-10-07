@@ -39,7 +39,7 @@ TWITTER_APP_SECRET='INSERT_TWITTER_APP_SECRET'
 gem 'dotenv-rails' # Needed to export ID and secret values into environment variables
 ```
 * Enter the command "bundle install".
-* Enter the command "^dotenv-rails$".
+* Enter the command "gem list ^dotenv-rails$".
 * Pin the version number of the dotenv-rails gem in your Gemfile.
 * Enter the command "bundle install".
 
