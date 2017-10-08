@@ -55,8 +55,19 @@ git push origin master
 ```
 https://(base URL)/users/auth/facebook/callback
 ```
+* Save the changes.
+* On the left side of the screen, go to "App Review".
+* MORE
 
-## Google
+## Updating GitHub Settings
+* From your browser, log into your GitHub account.  Go to the upper right corner of the page and click on the menu button.  Select "Settings".
+* On the left side of your settings page, go down to the "Developer Settings" section and click on "OAuth Apps".
+* Click on your app.
+* Change the Authorization callback URL of your app to http://(base URL)/users/auth/github/callback .  This means that you will not be able to log into the version of your app running on your local machine.
+* Click on Update Application.
+* MORE
+
+## Updating Google Settings
 * Go to the [Google Developers Console](https://console.developers.google.com).
 * On the left side of the screen, click on "Credentials", and then create a new project.  Fill in the name of your app with the same name you've been using in GitHub and Heroku.
 * Click on "Create Credentials", and select "OAuth client ID".  Fill in the OAuth consent screen.
