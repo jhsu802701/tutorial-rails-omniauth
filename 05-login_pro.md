@@ -1,69 +1,5 @@
 # Chapter 5: OmniAuth Login (Production Environment)
 
-Allowing users to log into your app with Facebook, Google, or other external authentication services requires the right credentials.  If you don't already have an account with each of these services, be sure to create one first.
-
-## Facebook
-* Go to the [Facebook for Developers page](https://developers.facebook.com/).
-* Create a new app.  Fill in the name of your app with the same name you've been using in GitHub and Heroku.
-* Go to the Dashboard to see the App ID and App Secret.
-* For easier reference, save your App ID and App Secret in KeePassX (or your preferred password manager).
-* From your app's Dashboard, add the Facebook Login feature (which is under Products).  In the list of "Valid OAuth redirect URIs", the enter the following production environment URL and multiple potential development environment URLs:
-```
-https://(base URL)/users/auth/facebook/callback
-http://localhost:3000/users/auth/facebook/callback
-http://localhost:3001/users/auth/facebook/callback
-http://localhost:3002/users/auth/facebook/callback
-http://localhost:3003/users/auth/facebook/callback
-http://localhost:3004/users/auth/facebook/callback
-http://localhost:3005/users/auth/facebook/callback
-http://localhost:3006/users/auth/facebook/callback
-http://localhost:3007/users/auth/facebook/callback
-http://localhost:3008/users/auth/facebook/callback
-http://localhost:3009/users/auth/facebook/callback
-http://localhost:3010/users/auth/facebook/callback
-```
-
-## Google
-* Go to the [Google Developers Console](https://console.developers.google.com).
-* On the left side of the screen, click on "Credentials", and then create a new project.  Fill in the name of your app with the same name you've been using in GitHub and Heroku.
-* Click on "Create Credentials", and select "OAuth client ID".  Fill in the OAuth consent screen.
-* After you submit your OAuth consent form, you'll be asked for the application type.  Select "web application", and fill in the appropriate authorized redirect URLs.
-* In the list of URLs under "Authorized JavaScript origins", add the following URLs:
-```
-https://(base URL)
-http://localhost:3000
-http://localhost:3001
-http://localhost:3002
-http://localhost:3003
-http://localhost:3004
-http://localhost:3005
-http://localhost:3006
-http://localhost:3007
-http://localhost:3008
-http://localhost:3009
-http://localhost:3010
-```
-* In the list of URLs under "Authorized redirect URIs", add the following URLs:
-```
-https://(base URL)/users/auth/google_oauth2/callback
-http://localhost:3000/users/auth/google_oauth2/callback
-http://localhost:3000/users/auth/google_oauth2/callback
-http://localhost:3001/users/auth/google_oauth2/callback
-http://localhost:3002/users/auth/google_oauth2/callback
-http://localhost:3003/users/auth/google_oauth2/callback
-http://localhost:3004/users/auth/google_oauth2/callback
-http://localhost:3005/users/auth/google_oauth2/callback
-http://localhost:3006/users/auth/google_oauth2/callback
-http://localhost:3007/users/auth/google_oauth2/callback
-http://localhost:3008/users/auth/google_oauth2/callback
-http://localhost:3009/users/auth/google_oauth2/callback
-http://localhost:3010/users/auth/google_oauth2/callback
-```
-* You will now see your client ID and client secret.
-* For easier reference, save your App ID and App Secret in KeePassX (or your preferred password manager).
-* From your app's dashboard, click on "Enable APIs and Services".  Enable the Contacts API and Google+ API.
-
-
 ## User Model
 * In the user model, add the following lines just before the end of the public section:
 ```
@@ -79,3 +15,55 @@ http://localhost:3010/users/auth/google_oauth2/callback
     end
   end
 ```
+* The new_with_session function was not necessary for the test or development environments, but it is necessary for the production environment.
+* Enter the command "sh git_check.sh".  All tests should pass, and there should be no offenses.
+* Enter the following commands:
+```
+git add .
+git commit -m "Added the new_with_session function to the user model"
+git push origin master
+```
+* Enter the command "sh heroku.sh".
+
+## Environment Variables
+* In the development environment, it was necessary to set the environment variables in the .env file in order to allow you to login to your app with the OmniAuth services.  In the production environment, you also need to set the environment variables.
+* Log into your Heroku account from your browser, go to your app, click on Settings, and click on "Reveal Config Vars".
+* Open the local .env file in your app.  For each environment variable in the .env file, add it to your app with the associated value.
+* In your shell terminal, enter the command "heroku restart" to restart the Heroku server.
+* From your app's Heroku page, try to log in through Facebook.  You'll be logged in, but the URL will show localhost instead of Heroku.  Log out.
+* From your app's Heroku page, try to log in through GitHub.  You won't be logged in, and the URL will show localhost instead of Heroku.
+* From your app's Heroku page, try to log in through Google.  You'll be logged in, but the URL will show localhost instead of Heroku.  Log out.
+
+## config/initializers/devise.rb
+* The problem is config/initializers/devise.rb.  Note that the callback URL is localhost instead of Heroku.  In the lines beginning with "config.omniauth", replace localhost:3000 with the base URL of your app in Heroku.
+* Enter the command "sh git_check.sh".  All tests should pass, and there should be no offenses.
+* Enter the following commands:
+```
+git add .
+git commit -m "Updated config/initializers/devise.rb with the production callback URLs"
+git push origin master
+```
+* Enter the command "sh heroku.sh".
+* From your app's Heroku page, try to log in through Facebook.  You'll an error message telling you that the redirect URI is not whitelisted in the app's Client OAuth Settings.
+* From your app's Heroku page, try to log in through GitHub.   You won't be logged in, and the URL will show localhost instead of Heroku.
+* From your app's Heroku page, try to log in through Google.  You'll get a 400 error message telling you that the redirect URI does not match the ones authorized for the OAuth client.
+
+## Updating Facebook Settings
+* Go to the [Facebook for Developers page](https://developers.facebook.com/).
+* Go to your app.  Go to the Products section, and click on "Facebook Login".
+* In the list of "Valid OAuth redirect URIs", enter the following production environment URL:
+```
+https://(base URL)/users/auth/facebook/callback
+```
+
+## Google
+* Go to the [Google Developers Console](https://console.developers.google.com).
+* On the left side of the screen, click on "Credentials", and then create a new project.  Fill in the name of your app with the same name you've been using in GitHub and Heroku.
+* Click on "Create Credentials", and select "OAuth client ID".  Fill in the OAuth consent screen.
+* After you submit your OAuth consent form, you'll be asked for the application type.  Select "web application", and fill in the appropriate authorized redirect URLs.
+* In the list of URLs under "Authorized JavaScript origins", add the base URL of your app.
+* In the list of URLs under "Authorized redirect URIs", add the following URLs:
+```
+https://(base URL)/users/auth/google_oauth2/callback
+```
+* You should now be able to log into your app on Heroku through your Google account.
