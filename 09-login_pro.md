@@ -1,4 +1,4 @@
-# Chapter 5: OmniAuth Login (Production Environment)
+# Chapter 9: OmniAuth Login (Production Environment)
 
 ## User Model
 * In the user model, add the following lines just before the end of the public section:
