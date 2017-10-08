@@ -29,7 +29,6 @@ git push origin master
 * In the development environment, it was necessary to set the environment variables in the .env file in order to allow you to login to your app with the OmniAuth services.  In the production environment, you also need to set the environment variables.
 * Log into your Heroku account from your browser, go to your app, click on Settings, and click on "Reveal Config Vars".
 * Open the local .env file in your app.  For each environment variable in the .env file, add it to your app with the associated value.
-* In your shell terminal, enter the command "heroku restart" to restart the Heroku server.
 * From your app's Heroku page, try to log in through Facebook.  You'll be logged in, but the URL will show localhost instead of Heroku.  Log out.
 * From your app's Heroku page, try to log in through GitHub.  You won't be logged in, and the URL will show localhost instead of Heroku.
 * From your app's Heroku page, try to log in through Google.  You'll be logged in, but the URL will show localhost instead of Heroku.  Log out.
@@ -44,6 +43,7 @@ git commit -m "Updated config/initializers/devise.rb with the production callbac
 git push origin master
 ```
 * Enter the command "sh heroku.sh".
+* In your shell terminal, enter the command "heroku restart" to restart the Heroku server.
 * From your app's Heroku page, try to log in through Facebook.  You'll an error message telling you that the redirect URI is not whitelisted in the app's Client OAuth Settings.
 * From your app's Heroku page, try to log in through GitHub.   You won't be logged in, and the URL will show localhost instead of Heroku.
 * From your app's Heroku page, try to log in through Google.  You'll get a 400 error message telling you that the redirect URI does not match the ones authorized for the OAuth client.
@@ -56,8 +56,7 @@ git push origin master
 https://(base URL)/users/auth/facebook/callback
 ```
 * Save the changes.
-* On the left side of the screen, go to "App Review".
-* MORE
+* You now should be able to login to your app on Heroku through your Facebook account.
 
 ## Updating GitHub Settings
 * From your browser, log into your GitHub account.  Go to the upper right corner of the page and click on the menu button.  Select "Settings".
@@ -65,7 +64,7 @@ https://(base URL)/users/auth/facebook/callback
 * Click on your app.
 * Change the Authorization callback URL of your app to http://(base URL)/users/auth/github/callback .  This means that you will not be able to log into the version of your app running on your local machine.
 * Click on Update Application.
-* MORE
+* You now should be able to login to your app on Heroku through your GitHub account.
 
 ## Updating Google Settings
 * Go to the [Google Developers Console](https://console.developers.google.com).
