@@ -9,6 +9,20 @@ Enter the command "git checkout -b omniauth_display".
 * Enter the command "rails generate integration_test omniauth_display".
 * In the resulting test/integration/omniauth_display_test.rb file, replace the contents between the line "class OmniauthDisplayTest < ActionDispatch::IntegrationTest" and "end" with the following:
 ```
+  test 'User password reset page notifies OmniAuth users that this action is not necessary' do
+    visit root_path
+    click_on 'Login'
+    click_on 'Forgot your password?'
+    assert page.has_text?('you do not need a special password for this site.')
+  end
+
+  test 'User resend confirmation page notifies OmniAuth users that this action is not necessary' do
+    visit root_path
+    click_on 'Login'
+    click_on 'Didn't receive confirmation instructions?'
+    assert page.has_text?('you do not need a special password for this site.')
+  end
+
   test "Facebook user's home page and profile page show that Facebook was used to login" do
     create_omniauth_users
     visit root_path
@@ -36,6 +50,7 @@ Enter the command "git checkout -b omniauth_display".
     visit users_path
     assert page.has_text?('Provider')
     assert page.has_text?('Facebook')
+    assert page.has_text?('GitHub')
     assert page.has_text?('Google')
   end
 ```
