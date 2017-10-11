@@ -81,7 +81,7 @@ Enter the command "git checkout -b omniauth_display".
 ```
 * Enter the command "sh test_app.sh".  All 6 new tests fail.
 * Enter the command "alias test1='(command used to rerun failed tests MINUS the TESTOPTS portion)'".
-* Enter the command test1.  All 6 new tests fail.
+* Enter the command test1.  All 7 new tests fail.
 
 ## app/views/users/shared/_links.html.erb
 * In this section, you will change the text reading "Sign in with GoogleOauth2" on the user login page with "Sign in with Google".
@@ -98,7 +98,7 @@ Enter the command "git checkout -b omniauth_display".
   <% end -%>
 <% end -%>
 ```
-* Enter the command "test1".  Now only 5 of the tests fail.
+* Enter the command "test1".  Now only 6 of the tests fail.
 
 ## app/views/users/passwords/new.html.erb
 * In this section, you will add a message to the password reset request page noting that this action is not necessary for those who used an OmniAuth service to log in.
@@ -109,7 +109,7 @@ Enter the command "git checkout -b omniauth_display".
 NOTE: If you rely on Facebook, GitHub, or Google to login to this site, then you do NOT need a special password.
 <br><br>
 ```
-* Enter the command "test1".  Now only 4 of the tests fail.
+* Enter the command "test1".  Now only 5 of the tests fail.
 
 ## app/views/users/confirmations/new.html.erb
 * In this section, you will add a message to the user confirmation request page noting that this action is not necessary for those who used an OmniAuth service to log in.
@@ -120,7 +120,7 @@ NOTE: If you rely on Facebook, GitHub, or Google to login to this site, then you
 NOTE: If you rely on Facebook, GitHub, or Google to login to this site, then you do NOT need a confirmation.
 <br><br>
 ```
-* Enter the command "test1".  Now only 3 of the tests fail.  The test failures are all due to the missing method create_omniauth_users.
+* Enter the command "test1".  Now only 4 of the tests fail.  The test failures are all due to the missing method create_omniauth_users.
 
 ## test/test_helper.rb
 * In the test/test_helper.rb file, add the following lines:
@@ -150,13 +150,20 @@ def create_omniauth_users
   click_on 'Logout'
 end
 ```
+* Enter the command "test1".  Now the tests fail because some of the expected content is missing.
 
 ## Home Page
 * In the app/views/static_pages/home.html.erb page, add the following code just before the end of the user section:
 ```
-
+    <% if current_user.provider == 'facebook' %>
+      <br>You are logged in with Facebook.<br>
+    <% elsif current_user.provider == 'github' %>
+      <br>You are logged in with GitHub.<br>
+    <% elsif current_user.provider == 'google-oauth2' %>
+      <br>You are logged in with Google.<br>
+    <% end %>
 ```
-* Enter the 
+* Enter the command "test1".
 
 ## User Profile Page
 
