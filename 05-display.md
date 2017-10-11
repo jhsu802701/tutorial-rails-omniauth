@@ -167,13 +167,14 @@ end
   <% end %>
   </td>
 ```
-* Enter the command "test1".  Now all tests pass.
+* Enter the command "test1".  Now all tests should pass.
 
 ## User Index Search
 * Edit the file app/models/user.rb and add "provider" to the list of RANSACKABLE_ATTRIBUTES.
 * Enter the command "test1".  Now all tests should still pass.
 
 ## Wrapping Up
+* Enter the command "sh git_check.sh".  All tests should pass, and there should be no offenses.
 * Enter the following commands:
 ```
 git add .
