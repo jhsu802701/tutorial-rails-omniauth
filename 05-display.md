@@ -123,7 +123,7 @@ end
 
 ## Home Page
 * 3 of the tests fail because the home page does not specify which OmniAuth service was used to log in.
-* In the app/views/static_pages/home.html.erb file/home/jhsu/jhsu802701/docker-debian-stretch/rbenv-general/shared/omni-20171006-200007-650/app/views/users/index.html.erb, add the following code just before the end of the user section:
+* In the app/views/static_pages/home.html.erb file, add the following code just before the end of the user section:
 ```
     <% if current_user.provider == 'facebook' %>
       <br>You logged in with Facebook.<br>
