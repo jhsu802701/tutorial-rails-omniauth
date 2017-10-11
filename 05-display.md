@@ -17,22 +17,23 @@ Enter the command "git checkout -b omniauth_display".
 ```
   test "'GoogleOauth2' has been replaced with 'Google'" do
     visit root_path
-    assert page.has_link?('Sign in with GoogleOauth2', href: user_google_oauth2_omniauth_authorize_path)
-    assert_not page.has_link?('Sign in with Google', href: user_google_oauth2_omniauth_authorize_path)
+    click_on 'Login'
+    assert page.has_link?('Sign in with Google', href: user_google_oauth2_omniauth_authorize_path)
+    assert_not page.has_link?('Sign in with GoogleOauth2', href: user_google_oauth2_omniauth_authorize_path)
   end
 
   test 'User password reset page notifies OmniAuth users that this action is not necessary' do
     visit root_path
     click_on 'Login'
     click_on 'Forgot your password?'
-    assert page.has_text?('you do not need a special password for this site.')
+    assert page.has_text?('you do NOT need a special password.')
   end
 
   test 'User resend confirmation page notifies OmniAuth users that this action is not necessary' do
     visit root_path
     click_on 'Login'
     click_on "Didn't receive confirmation instructions?"
-    assert page.has_text?('you do not need a special password for this site.')
+    assert page.has_text?('you do NOT need a confirmation.')
   end
 
   test "Facebook user's home page and profile page show that Facebook was used to login" do
@@ -43,6 +44,17 @@ Enter the command "git checkout -b omniauth_display".
     assert page.has_text?('You logged in with Facebook.')
     click_on 'Your Profile'
     assert page.has_text?('OmniAuth Service Provider: Facebook')
+    click_on 'Logout'
+  end
+
+  test "GitHub user's home page and profile page show that GitHub was used to login" do
+    create_omniauth_users
+    visit root_path
+    click_on 'Sign in with GitHub'
+    click_on 'Home'
+    assert page.has_text?('You logged in with GitHub.')
+    click_on 'Your Profile'
+    assert page.has_text?('OmniAuth Service Provider: GitHub')
     click_on 'Logout'
   end
 
@@ -67,9 +79,48 @@ Enter the command "git checkout -b omniauth_display".
     assert page.has_text?('Google')
   end
 ```
-* Enter the command "sh test_app.sh".  All three new tests fail.
+* Enter the command "sh test_app.sh".  All 6 new tests fail.
 * Enter the command "alias test1='(command used to rerun failed tests MINUS the TESTOPTS portion)'".
-* Enter the command test1.  All three new tests fail.
+* Enter the command test1.  All 6 new tests fail.
+
+## app/views/users/shared/_links.html.erb
+* In this section, you will change the text reading "Sign in with GoogleOauth2" on the user login page with "Sign in with Google".
+* Edit the file app/views/users/shared/_links.html.erb.
+* Replace the entire if conditional containing "if devise_mapping.omniauthable?" with the following code:
+```
+<%- if devise_mapping.omniauthable? %>
+  <%- resource_class.omniauth_providers.each do |provider| %>
+    <%- if "#{OmniAuth::Utils.camelize(provider)}" == 'GoogleOauth2' %>
+      <%= link_to "Sign in with Google", omniauth_authorize_path(resource_name, provider) %><br />
+    <%- else %>
+      <%= link_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", omniauth_authorize_path(resource_name, provider) %><br />
+    <% end -%>
+  <% end -%>
+<% end -%>
+```
+* Enter the command "test1".  Now only 5 of the tests fail.
+
+## app/views/users/passwords/new.html.erb
+* In this section, you will add a message to the password reset request page noting that this action is not necessary for those who used an OmniAuth service to log in.
+* Edit the file app/views/users/passwords/new.html.erb.
+* Just before the line containing "form_for", add the following lines:
+```
+<br><br>
+NOTE: If you rely on Facebook, GitHub, or Google to login to this site, then you do NOT need a special password.
+<br><br>
+```
+* Enter the command "test1".  Now only 4 of the tests fail.
+
+## app/views/users/confirmations/new.html.erb
+* In this section, you will add a message to the user confirmation request page noting that this action is not necessary for those who used an OmniAuth service to log in.
+* Edit the file app/views/users/confirmations/new.html.erb.
+* Just before the line containing "form_for", add the following lines:
+```
+<br><br>
+NOTE: If you rely on Facebook, GitHub, or Google to login to this site, then you do NOT need a confirmation.
+<br><br>
+```
+* Enter the command "test1".  Now only 3 of the tests fail.  The test failures are all due to the missing method create_omniauth_users.
 
 ## test/test_helper.rb
 * In the test/test_helper.rb file, add the following lines:
