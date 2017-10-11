@@ -3,6 +3,8 @@
 ## User Model
 * In the user model, add the following lines just before the end of the public section:
 ```
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
   def self.new_with_session(params, session)
     super.tap do |user|
       if data = session['devise.facebook_data'] && session['devise.facebook_data']['extra']['raw_info']
@@ -14,6 +16,8 @@
       end
     end
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity  
 ```
 * The new_with_session function was not necessary for the test or development environments, but it is necessary for the production environment.
 * Enter the command "sh git_check.sh".  All tests should pass, and there should be no offenses.
