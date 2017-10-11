@@ -149,11 +149,11 @@ end
 * Enter the command "test1".  Now only 1 test still fails.
 
 ## User Index Page
-* In the app/views/users/index.html.erb file, add the following line just before the line containing """</tr>""":
+* In the app/views/users/index.html.erb file, add the following line just before the line containing '</tr>':
 ```
     <td><b>Provider</b></td>
 ```
-* In the /app/views/users/_user.html.erb file, add the following line just before the line containing """</tr>""":
+* In the /app/views/users/_user.html.erb file, add the following line just before the line containing '</tr>':
 ```
   <td>
   <% if user.provider == 'facebook' %>
