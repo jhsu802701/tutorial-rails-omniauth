@@ -64,48 +64,9 @@ Enter the command "git checkout -b omniauth_display".
     assert page.has_text?('Google')
   end
 ```
-* Enter the command "sh test_app.sh".  All 6 new tests fail.
+* Enter the command "sh test_app.sh".  All 5 new tests fail.
 * Enter the command "alias test1='(command used to rerun failed tests MINUS the TESTOPTS portion)'".
-* Enter the command test1.  All 7 new tests fail.
-
-## app/views/users/shared/_links.html.erb
-* In this section, you will change the text reading "Sign in with GoogleOauth2" on the user login page with "Sign in with Google".
-* Edit the file app/views/users/shared/_links.html.erb.
-* Replace the entire if conditional containing "if devise_mapping.omniauthable?" with the following code:
-```
-<%- if devise_mapping.omniauthable? %>
-  <%- resource_class.omniauth_providers.each do |provider| %>
-    <%- if "#{OmniAuth::Utils.camelize(provider)}" == 'GoogleOauth2' %>
-      <%= link_to "Sign in with Google", omniauth_authorize_path(resource_name, provider) %><br />
-    <%- else %>
-      <%= link_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", omniauth_authorize_path(resource_name, provider) %><br />
-    <% end -%>
-  <% end -%>
-<% end -%>
-```
-* Enter the command "test1".  Now only 6 of the tests fail.
-
-## app/views/users/passwords/new.html.erb
-* In this section, you will add a message to the password reset request page noting that this action is not necessary for those who used an OmniAuth service to log in.
-* Edit the file app/views/users/passwords/new.html.erb.
-* Just before the line containing "form_for", add the following lines:
-```
-<br><br>
-NOTE: If you rely on Facebook, GitHub, or Google to login to this site, then you do NOT need a special password.
-<br><br>
-```
-* Enter the command "test1".  Now only 5 of the tests fail.
-
-## app/views/users/confirmations/new.html.erb
-* In this section, you will add a message to the user confirmation request page noting that this action is not necessary for those who used an OmniAuth service to log in.
-* Edit the file app/views/users/confirmations/new.html.erb.
-* Just before the line containing "form_for", add the following lines:
-```
-<br><br>
-NOTE: If you rely on Facebook, GitHub, or Google to login to this site, then you do NOT need a confirmation.
-<br><br>
-```
-* Enter the command "test1".  Now only 4 of the tests fail.  The test failures are all due to the missing method create_omniauth_users.
+* Enter the command test1.  All 5 tests fail.
 
 ## test/test_helper.rb
 * In the test/test_helper.rb file, add the following lines:
