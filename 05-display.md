@@ -1,6 +1,12 @@
 # Chapter 5: Updating the Displays
 
-In this chapter, certain pages will be updated to show the OmniAuth service in use.  These pages are the home page, the user profile page, and the index page.  The user search form will be updated to allow searching by provider.  The pages where users can request a password reset or the resending of a confirmation email will be updated to notify users who logged in with Facebook, GitHub, or Google that such actions are not necessary.
+In this chapter, certain pages will be updated to reflect the use of OmniAuth services.
+
+## Objectives
+* Change the text reading "Sign in with GoogleOauth2" on the user login page with "Sign in with Google".
+* Provide messages on the pages where users can request a password reset or the resending of a confirmation email that these actions are not necessary for those who used an OmniAuth service to log in.
+* Provide a message on the home page notifying the OmniAuth user of the specific OmniAuth service used.
+* Add the user's OmniAuth service to the user profile page and the index page.
 
 ## New Branch
 Enter the command "git checkout -b omniauth_display".
@@ -9,6 +15,12 @@ Enter the command "git checkout -b omniauth_display".
 * Enter the command "rails generate integration_test omniauth_display".
 * In the resulting test/integration/omniauth_display_test.rb file, replace the contents between the line "class OmniauthDisplayTest < ActionDispatch::IntegrationTest" and "end" with the following:
 ```
+  test "'GoogleOauth2' has been replaced with 'Google'" do
+    visit root_path
+    assert page.has_link?('Sign in with GoogleOauth2', href: user_google_oauth2_omniauth_authorize_path)
+    assert_not page.has_link?('Sign in with Google', href: user_google_oauth2_omniauth_authorize_path)
+  end
+
   test 'User password reset page notifies OmniAuth users that this action is not necessary' do
     visit root_path
     click_on 'Login'
@@ -46,6 +58,7 @@ Enter the command "git checkout -b omniauth_display".
   end
 
   test 'The user index should show the OmniAuth Service provider' do
+    create_omniauth_users
     login_as(@a1, scope: :admin)
     visit users_path
     assert page.has_text?('Provider')
