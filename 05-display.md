@@ -31,7 +31,7 @@ Enter the command "git checkout -b omniauth_display".
   test 'User resend confirmation page notifies OmniAuth users that this action is not necessary' do
     visit root_path
     click_on 'Login'
-    click_on 'Didn't receive confirmation instructions?'
+    click_on "Didn't receive confirmation instructions?"
     assert page.has_text?('you do not need a special password for this site.')
   end
 
