@@ -114,7 +114,7 @@ end
 * Enter the following commands:
 ```
 git add .
-git commit -m "Updated pages to show the user's OmniAuth provider"
+git commit -m "Updated the OmniAuth displays"
 git push origin omniauth_display
 ```
 * Go to the GitHub repository and click on the "Compare and pull request" button for this branch.
