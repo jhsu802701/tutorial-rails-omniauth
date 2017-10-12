@@ -1,23 +1,25 @@
-# Chapter 6: Disable Unnecessary Functions for OmniAuth Users
+# Chapter 6: Disable the Normal Login Process for OmniAuth Users
 
-In this chapter, you will disable OmniAuth users from the normal login process, password resets, having confirmation emails resent, and unlocking their accounts.  External services (Facebook, GitHub, or Google) are responsible for these tasks.
+In this chapter, you will disable OmniAuth users from the normal login process.
 
 ## New Branch
-Enter the command "git checkout -b omniauth_disable".
+Enter the command "git checkout -b omniauth_disable_login".
 
 ## Integration Test
-* Enter the command "rails generate integration_test omniauth_disable".
-* In the resulting test/integration/omniauth_disable_test.rb file, replace the contents between the line "class OmniauthDisableTest < ActionDispatch::IntegrationTest" and "end" with the following:
+* Enter the command "rails generate integration_test omniauth_disable_login".
+* In the resulting test/integration/omniauth_disable_login_test.rb file, replace the contents between the line "class OmniauthDisableLoginTest < ActionDispatch::IntegrationTest" and "end" with the following:
 ```
-test 'omniauth user password resets are disabled' do
- create_omniauth_users
-end
+  def check_login_disabled (e, p)
+    login_user(e, p, false)
+    assert page.has_text?('Please log in with Facebook, GitHub, or Google.')
+  end
 
-test 'omniauth users may not have confirmation emails resent' do
-end
-
-test 'omniauth users may not unlock accounts' do
-end
+  test 'omniauth users may not log in throught the normal login process' do
+    create_omniauth_users
+    check_login_disabled('mzuckerberg@facebook.com', 'I love fake news!')
+    check_login_disabled('cwanstrath@github.com', 'More popular than BitBucket!')
+    check_login_disabled('sbrin@gmail.com', 'More popular than Yahoo!')
+  end
 ```
 
 ## Wrapping Up
@@ -25,8 +27,8 @@ end
 * Enter the following commands:
 ```
 git add .
-git commit -m "Disabled unnecessary functions for OmniAuth users"
-git push origin omniauth_disable
+git commit -m "Disabled the normal login process for OmniAuth users"
+git push origin omniauth_disable_login
 ```
 * Go to the GitHub repository and click on the "Compare and pull request" button for this branch.
 * When you see that your app passes in contiuous integration, accept this pull request to merge it with the master branch.
