@@ -182,6 +182,7 @@ git commit -m "Updated the OmniAuth displays"
 git push origin omniauth_display
 ```
 * Go to the GitHub repository and click on the "Compare and pull request" button for this branch.
+* CodeClimate will flag your user model for RuboCop issues.  Mark them as Wontfix, and then press "Approve".
 * When you see that your app passes in contiuous integration, accept this pull request to merge it with the master branch.
 * Enter the following commands:
 ```
