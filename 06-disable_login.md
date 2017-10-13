@@ -1,7 +1,5 @@
 # Chapter 6: Disable the Normal Login Process for OmniAuth Users
 
-In this chapter, you will disable OmniAuth users from the normal login process.
-
 ## New Branch
 Enter the command "git checkout -b omniauth_disable_login".
 
@@ -14,13 +12,19 @@ Enter the command "git checkout -b omniauth_disable_login".
     assert page.has_text?('Please log in with Facebook, GitHub, or Google.')
   end
 
-  test 'omniauth users may not log in throught the normal login process' do
+  test 'The normal login process is disabled for OmniAuth users' do
     create_omniauth_users
     check_login_disabled('mzuckerberg@facebook.com', 'I love fake news!')
     check_login_disabled('cwanstrath@github.com', 'More popular than BitBucket!')
     check_login_disabled('sbrin@gmail.com', 'More popular than Yahoo!')
   end
 ```
+* Enter the command "sh test_app.sh".  There is 1 test failure.
+* Enter the command "alias test1='command to rerun the failed tests minus the TESTOPTS portion'".
+* Enter the command "test1".  The test fails because the expected text does not appear after the attempt to log in.
+
+## User Sessions Controller
+
 
 ## Wrapping Up
 * Enter the command "sh git_check.sh".  All tests should pass, and there should be no offenses.
